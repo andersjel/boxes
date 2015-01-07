@@ -1,9 +1,7 @@
 # The *boxes* module
 
-This module is designed to layout boxes on a page or in a figure solving the
-kind of problems that show up.
-
-You specify constraints such as
+This module is designed to layout boxes on a page or in a figure. You specify
+constraints such as
 
 - This box has an aspect ratio of 3:2.
 - The height of this box is the same as that one.
@@ -34,4 +32,7 @@ example
 ## How it works
 
 The *boxes* module is built on top of `boxes.symmath` which is a library for
-cleanly expressing and solving systems of linear equations.
+cleanly expressing and solving systems of linear equations. `boxes.symmath`
+provides a class to represent expressions and this class emulates a numerical
+type. *numpy* is used by `boxes.symmath` to do the actual work of solving the
+linear systems thus represented.
