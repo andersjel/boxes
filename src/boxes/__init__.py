@@ -19,7 +19,9 @@ class Box:
     def eqs(self):
         return chain(self._eqs, *(c.eqs() for c in self.children))
 
-    def solve(self, eqs=()):
+    def solve(self, eqs=(), fix_to_origin=True):
+        if fix_to_origin:
+            eqs = chain(eqs, self.loc)  # put the box at (0, 0)
         return solve_harder(chain(eqs, self.eqs()))
 
     def walk(self):
@@ -176,7 +178,6 @@ def place_all(layout, eqs=(), figure_class=Figure):
     Side effects:
         Calls figure.place(box, loc, size) for all boxes in the figure.
     """
-    eqs = chain(eqs, layout.loc)  # put the layout at (0, 0)
     sls = layout.solve(eqs)
     figure = figure_class(sls.eval(layout.size))
     for box in layout.walk():
