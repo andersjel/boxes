@@ -87,15 +87,24 @@ class Colorbar(Grid):
             ticks[-1].label2.set_verticalalignment('top')
         return cbar
 
-def layout_to_mpl(layout, *args, **kwargs):
-    figure, sls = boxes.place_all(layout, *args, **kwargs)
-    size = figure.conv_size()
-    mpl_figure = pyplot.figure(figsize=size)
-
-    for box in layout.walk():
-        box.fig = mpl_figure
-    for box in layout.walk():
+def glue(boxes, units_to_inches=2.54, solution=None):
+    if not solution:
+        solution = boxes.solve()
+    size = solution.eval(boxes.size)
+    size_in_inches = tuple(units_to_inches*v for v in size)
+    figure = pyplot.figure(figsize=size_in_inches)
+    W, H = size
+    # We monkey-patch every box with its final position using the coordinate
+    # system matplotlib expects for laying out axes (which is relative to the
+    # figure size).
+    for box in boxes.walk():
+        x, y = solution.eval(box.loc)
+        w, h = solution.eval(box.size)
+        box.fig = figure
+        box.locf = (x/W, (H - y - h)/H)
+        box.sizef = (w/W, h/H)
+        box.rectf = tuple(chain(box.locf, box.sizef))
+    for box in boxes.walk():
         if hasattr(box, 'auto'):
             box.auto()
-
-    return mpl_figure, figure, sls
+    return figure
