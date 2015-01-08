@@ -1,4 +1,5 @@
 import boxes
+import itertools
 from boxes import Grid, Box
 from matplotlib import pyplot
 
@@ -103,7 +104,7 @@ def glue(boxes, units_to_inches=2.54, solution=None):
         box.fig = figure
         box.locf = (x/W, (H - y - h)/H)
         box.sizef = (w/W, h/H)
-        box.rectf = tuple(chain(box.locf, box.sizef))
+        box.rectf = tuple(itertools.chain(box.locf, box.sizef))
     for box in boxes.walk():
         if hasattr(box, 'auto'):
             box.auto()
