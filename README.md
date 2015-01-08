@@ -45,7 +45,7 @@ The *boxes* module depends on
 
 ## Using with *matplotlib*
 
-The *boxes* module was written as a more powerfull alternative to the subfigure
+The *boxes* module was written as a more powerful alternative to the subfigure
 support of *matplotlib* and provides some glue code for this usage. Here is an
 example
 
@@ -53,8 +53,8 @@ example
 
 ## How it works
 
-The *boxes* module is built on top of `boxes.symmath` which is a library for
-cleanly expressing and solving systems of linear equations. `boxes.symmath`
-provides a class to represent expressions and this class emulates a numerical
-type. *numpy* is used by `boxes.symmath` to do the actual work of solving the
-linear systems thus represented.
+The *boxes* module is built on top of *boxes.symmath* which is a library for
+cleanly expressing and solving systems of linear equations. *symmath* provides a
+class to represent linear expressions and this class emulates a numerical type.
+*numpy* is used by *symmath* to do the actual work of solving the linear systems
+thus represented.
