@@ -1,5 +1,4 @@
 import boxes
-import itertools
 from boxes import Grid, Box
 from matplotlib import pyplot
 
@@ -8,7 +7,8 @@ text_drop    = 0.1
 
 class Plot(Box):
     def draw(self, **kwargs):
-        return self.fig.add_axes(self.rectf, **kwargs)
+        rectf = self.locf + self.sizef
+        return self.fig.add_axes(rectf, **kwargs)
 
 class Text(Grid):
     def __init__(
@@ -88,24 +88,44 @@ class Colorbar(Grid):
             ticks[-1].label2.set_verticalalignment('top')
         return cbar
 
-def glue(boxes, units_per_inch=2.54, solution=None):
+def glue(layout, units_per_inch=2.54, solution=None):
+    """Use a set of boxes to template a matplotlib figure.
+
+    This function solves `layout`, which should be a Box instance, and adds the
+    following attributes to every box in `layout`:
+    - fig: a newly created matplotlib Figure sized to match the layout.
+    - locf: the location of the box relative to the size of the figure using
+        matplotlib's coordinate system.
+    - sizef: the size of the box relative to the size of the layout.
+
+    After the attributes have been added. box.auto() is called for every box in
+    the layout if it has this function.
+
+    Keyword arguments:
+    - units_per_inch:
+        This is used to convert the units used by the layout to inches. The
+        default of 2.54 assumes you are using cm's as the unit for the layout.
+    - solution:
+        Pass in a solution for the layout obtained by calling layout.solve(). If
+        this is None, glue() will call layout.solve() for you.
+    Returns: A newly created matplotlib figure.
+    """
     if not solution:
-        solution = boxes.solve()
-    size = solution.eval(boxes.size)
+        solution = layout.solve()
+    size = solution.eval(layout.size)
     size_in_inches = tuple(v/units_per_inch for v in size)
     figure = pyplot.figure(figsize=size_in_inches)
     W, H = size
     # We monkey-patch every box with its final position using the coordinate
     # system matplotlib expects for laying out axes (which is relative to the
     # figure size).
-    for box in boxes.walk():
+    for box in layout.walk():
         x, y = solution.eval(box.loc)
         w, h = solution.eval(box.size)
         box.fig = figure
         box.locf = (x/W, (H - y - h)/H)
         box.sizef = (w/W, h/H)
-        box.rectf = tuple(itertools.chain(box.locf, box.sizef))
-    for box in boxes.walk():
+    for box in layout.walk():
         if hasattr(box, 'auto'):
             box.auto()
     return figure
