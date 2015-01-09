@@ -88,11 +88,11 @@ class Colorbar(Grid):
             ticks[-1].label2.set_verticalalignment('top')
         return cbar
 
-def glue(boxes, units_to_inches=2.54, solution=None):
+def glue(boxes, units_per_inch=2.54, solution=None):
     if not solution:
         solution = boxes.solve()
     size = solution.eval(boxes.size)
-    size_in_inches = tuple(units_to_inches*v for v in size)
+    size_in_inches = tuple(v/units_per_inch for v in size)
     figure = pyplot.figure(figsize=size_in_inches)
     W, H = size
     # We monkey-patch every box with its final position using the coordinate
