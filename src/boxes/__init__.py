@@ -13,8 +13,8 @@ class Box:
         if aspect is not None:
             self.eq(self.size[0] - self.size[1]*aspect)
 
-    def eq(self, e):
-        self._eqs.append(e)
+    def eq(self, a, b=0):
+        self._eqs.append(a - b)
 
     def eqs(self):
         return chain(self._eqs, *(c.eqs() for c in self.children))
