@@ -14,7 +14,7 @@ class Box:
             self.eq(self.size[0] - self.size[1]*aspect)
 
     def eq(self, a, b=0):
-        self._eqs.append(a - b)
+        self._eqs.append(Expr(a - b))
 
     def eqs(self):
         return chain(self._eqs, *(c.eqs() for c in self.children))
