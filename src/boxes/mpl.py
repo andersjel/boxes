@@ -16,12 +16,20 @@ class Text(Grid):
             text=None,
             vertical=False,
             align='c',
+            valign='b',
             color='black',
             text_height=text_height,
+            text_options=None,
+            expand=False,
             **kwargs
         ):
         self.text_box = Box()
-        if vertical:
+        if expand:
+            Grid.__init__(
+                self, 1, 1,
+                **kwargs
+            )
+        elif vertical:
             Grid.__init__(
                 self, 1, 1,
                 width=text_height,
@@ -37,8 +45,10 @@ class Text(Grid):
         self[0, 0].fix(self.text_box)
         self.vertical = vertical
         self.align = align
+        self.valign = valign
         self.text = text
         self.color = color
+        self.text_options = text_options
 
     def auto(self):
         if self.text is not None:
@@ -54,22 +64,28 @@ class Text(Grid):
             'va': 'baseline',
             'color': self.color,
         }
-        kws.update(kwargs)
+        ly = y
         if (not self.vertical) and self.align == 'c':
-            l = (x + w/2, y)
+            lx = x + w/2
         elif (not self.vertical) and self.align == 'r':
             kws['ha'] = 'right'
-            l = (x + w, y)
+            lx = x + w
         elif (not self.vertical) and self.align == 'l':
             kws['ha'] = 'left'
-            l = (x, y)
+            lx = x
         elif self.vertical and self.align == 'c':
             kws['va'] = 'center'
             kws['rotation'] = 'vertical'
-            l = (x + w/2, y + h/2)
+            lx = x + w/2
+            ly = y + h/2
         else:
             raise NotImplemented
-        return self.fig.text(l[0], l[1], text, **kws)
+        if self.valign == 'c':
+          ly = y + h/2
+        kws.update(kwargs)
+        if self.text_options is not None:
+          kws.update(self.text_options)
+        return self.fig.text(lx, ly, text, **kws)
 
 class Colorbar(Grid):
     def __init__(self, text_width=0.6):
