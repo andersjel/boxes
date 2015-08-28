@@ -53,7 +53,7 @@ def _slice_or_index_to_spec(dims, idx):
 class Grid(Box):
     def __init__(self, rows, cols, **kwargs):
         margins = {}
-        for m in ['all', 'top', 'right', 'bottom', 'left']:
+        for m in ['all', 'top', 'right', 'bottom', 'left', 'hor', 'vert']:
             margins[m] = kwargs.pop(m, None)
         Box.__init__(self, **kwargs)
         self.dims = (cols, rows)
@@ -100,9 +100,17 @@ class Grid(Box):
     def vspacing(self, i, l):
         self.spacings[1][i] = l
 
-    def margins(self, all=None, top=None, right=None, bottom=None, left=None):
+    def margins(self,
+        all=None,
+        top=None, right=None, bottom=None, left=None,
+        hor=None, vert=None,
+    ):
         if all is not None:
             self.margins(top=all, right=all, bottom=all, left=all)
+        if hor is not None:
+            self.margins(left=hor, right=hor)
+        if vert is not None:
+            self.margins(top=vert, bottom=vert)
         if top    is not None: self.vspacing(0,  top)
         if right  is not None: self.hspacing(-1, right)
         if bottom is not None: self.vspacing(-1, bottom)
