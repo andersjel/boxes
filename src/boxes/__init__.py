@@ -7,7 +7,9 @@ class Box:
         size = (width, height)
         size = tuple(sym() if x is None else x for x in size)
         self.size = size
-        self.loc = (sym(), sym())
+        loc = (sym(), sym())
+        self.loc = loc
+        self.xloc = (loc[0] + size[0], loc[1] + size[1])
         self._eqs = []
         self.children = []
         if aspect is not None:
