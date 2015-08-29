@@ -9,11 +9,15 @@ class Box:
         self.size = size
         loc = (sym(), sym())
         self.loc = loc
-        self.xloc = (loc[0] + size[0], loc[1] + size[1])
         self._eqs = []
         self.children = []
         if aspect is not None:
             self.eq(self.size[0] - self.size[1]*aspect)
+
+        self.left = loc[0]
+        self.top = loc[1]
+        self.right = loc[0] + size[0]
+        self.bottom = loc[1] + size[1]
 
     def eq(self, a, b=0):
         self._eqs.append(Expr(a - b))
