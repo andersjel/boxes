@@ -21,20 +21,20 @@ box3_loc = sls.eval(box3.loc)
 print('box3 is located at ({:.2f}, {:.2f}).'.format(*box3_loc))
 
 if __name__ == '__main__':
-    import cairo
-    import sys
-    output_filename, = sys.argv[1:]
-    dots_per_unit = 30
-    width, height = (int(x*dots_per_unit + 0.5) for x in total_size)
-    surf = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
-    ctx = cairo.Context(surf)
-    ctx.scale(dots_per_unit, dots_per_unit)
-    ctx.set_source_rgb(0.8, 0.8, 0.8)
-    ctx.paint()
-    ctx.set_source_rgb(0.4, 0.4, 0.4)
-    for box in (box1, box2, box3):
-        x, y = sls.eval(box.loc)
-        w, h = sls.eval(box.size)
-        ctx.rectangle(x, y, w, h)
-    ctx.fill()
-    surf.write_to_png(output_filename)
+  import cairo
+  import sys
+  output_filename, = sys.argv[1:]
+  dots_per_unit = 30
+  width, height = (int(x * dots_per_unit + 0.5) for x in total_size)
+  surf = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
+  ctx = cairo.Context(surf)
+  ctx.scale(dots_per_unit, dots_per_unit)
+  ctx.set_source_rgb(0.8, 0.8, 0.8)
+  ctx.paint()
+  ctx.set_source_rgb(0.4, 0.4, 0.4)
+  for box in (box1, box2, box3):
+    x, y = sls.eval(box.loc)
+    w, h = sls.eval(box.size)
+    ctx.rectangle(x, y, w, h)
+  ctx.fill()
+  surf.write_to_png(output_filename)
