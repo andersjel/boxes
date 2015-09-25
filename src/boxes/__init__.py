@@ -1,6 +1,3 @@
-from boxes.symmath import sym, Expr, solve_harder
-from itertools import chain
-from collections.abc import Iterable
 
 
 class Box:
