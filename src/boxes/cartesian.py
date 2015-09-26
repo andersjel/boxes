@@ -25,3 +25,11 @@ class Rect(namedtuple('Rect', 'top right bottom left')):
   @property
   def height(self):
     return self.bottom - self.top
+
+  @property
+  def loc(self):
+    return Vect(self.left, self.top)
+
+  @property
+  def size(self):
+    return Vect(self.width, self.height)

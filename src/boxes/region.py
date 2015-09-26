@@ -1,23 +1,15 @@
 import itertools
-from boxes.cartesian import Vect, Rect
+from boxes.cartesian import Rect
 
 
 class Region:
 
-  def __init__(self, layout, loc, size):
+  def __init__(self, layout, rect):
     self.layout = layout
-    self.loc = Vect(loc)
-    self.size = Vect(size)
+    self.rect = rect
 
-    self.width = size.x
-    self.height = size.y
-    self.rect = Rect(
-        loc.y,
-        loc.x + size.x,
-        loc.y + size.y,
-        loc.x,
-    )
-    self.__dict__.update(self.rect._as_dict())
+    for prop in 'width height top right bottom left loc size'.split():
+      setattr(self, prop, getattr(rect, prop))
 
   def pad(self, *args):
     if len(args) > 4:
@@ -26,21 +18,23 @@ class Region:
           .format(len(args))
       )
       offsets = itertools.islice(itertools.cycle(args), 4)
-      offsets = (s * offsets[i] for i, s in enumerate((1, -1, -1, 1)))
-      rect = Rect(x + y for x, y in zip(self.rect, offsets))
+      rect = Rect(
+          x + s * y
+          for x, s, y in
+          zip(self.rect, (1, -1, -1, 1), offsets)
+      )
+      return Region(self.layout, rect)
 
-      return region_from_rect(self.layout, rect)
-
-  def margins(self, *args):
+  def surround(self, *args):
     return self.pad(*(-x for x in args))
 
   def fix(self, other):
-    self.layout.merge(other.layout)
-    for x, y in zip(self.rect, other.rect):
-      self.layout.equate(x, y)
+    layout = merge_layouts((self, other))
+    layout.equate(x.rect, y.rect)
 
-def region_from_rect(layout, rect):
-  rect = Rect(rect)
-  loc = Vect(rect.left, rect.top)
-  size = Vect(rect.width, rect.height)
-  return Region(layout, loc, size)
+
+def merge_layouts(rs):
+  r0 = rs[0]
+  for r in rs[1:]:
+  r0.layout.merge(r.layout)
+  return r0.layout

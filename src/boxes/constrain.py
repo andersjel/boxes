@@ -1,6 +1,6 @@
 from boxes.cartesian import vect, side_shorthands
 from boxes.box import merge_layouts
-from boxes.region import region_from_rect
+from boxes.region import Region
 
 
 def align(sides, *rs):
@@ -45,6 +45,6 @@ def pairs_(xs):
 
 
 def bbox_(rs):
-  return region_from_rect(
+  return Region(
       rs[0].layout, (rs[0].top, rs[-1].right, rs[-1].bottom, rs[0].left)
   )
