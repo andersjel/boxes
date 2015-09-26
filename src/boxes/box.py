@@ -1,28 +1,13 @@
 from boxes.symmath import sym
-from boxes.cartesian import vect
+from boxes.cartesian import Vect
 from boxes.layout import Layout
+from boxes.region import Region
 
 
-class Rect:
-
-  def __init__(self, layout, loc, size):
-    self.layout = layout
-    self.loc = loc
-    self.size = size
-
-    # TODO Make these properties
-    self.left = loc.x
-    self.right = loc.x + size.x
-    self.top = loc.y
-    self.bottom = loc.y + size.y
-    self.width = size.x
-    self.height = size.y
-
-
-class Box(Rect):
+class Box(Region):
 
   def __init__(self, layout=None):
-    Rect.__init__(
+    Region.__init__(
         self,
         Layout() if layout is None else layout,
         vect(sym(), sym()),

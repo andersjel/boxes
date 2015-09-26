@@ -1,46 +1,9 @@
+from boxes.box import Box
+from boxes.grid import Grid
+from boxes.constrain import *
 
 
-class Box:
-
-  def __init__(self, width=None, height=None, aspect=None):
-    size = (width, height)
-    size = tuple(sym() if x is None else x for x in size)
-    self.size = size
-    loc = (sym(), sym())
-    self.loc = loc
-    self._eqs = []
-    self.children = []
-    if aspect is not None:
-      self.eq(self.size[0] - self.size[1] * aspect)
-
-    self.left = loc[0]
-    self.top = loc[1]
-    self.right = loc[0] + size[0]
-    self.bottom = loc[1] + size[1]
-
-  def eq(self, a, b=0):
-    self._eqs.append(Expr(a - b))
-
-  def eqs(self):
-    return chain(self._eqs, *(c.eqs() for c in self.children))
-
-  def solve(self, eqs=(), fix_to_origin=True):
-    if fix_to_origin:
-      eqs = chain(eqs, self.loc)  # put the box at (0, 0)
-    return solve_harder(chain(eqs, self.eqs()))
-
-  def walk(self):
-    """Iterate over this box, all children and all grand children"""
-    done = set()
-    remaining = [self]
-    while remaining:
-      box = remaining.pop()
-      if box in done:
-        continue
-      done.add(box)
-      yield box
-      remaining.extend(box.children)
-
+# TODO Remove everthing below
 
 def _slice_or_index_to_spec(dims, idx):
   if not len(idx) == 2:

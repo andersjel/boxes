@@ -1,13 +1,13 @@
 from collections import namedtuple
 
 
-class vect(namedtuple('vect', 'x y')):
+class Vect(namedtuple('Vect', 'x y')):
 
   def __add__(self, other):
-    return vect(u + v for u, v in zip(self, other))
+    return Vect(u + v for u, v in zip(self, other))
 
   def __sub__(self, other):
-    return vect(u - v for u, v in zip(self, other))
+    return Vect(u - v for u, v in zip(self, other))
 
 
 side_shorthands = {
@@ -16,3 +16,12 @@ side_shorthands = {
     'l': 'left',
     'r': 'right',
 }
+
+class Rect(namedtuple('Rect', 'top right bottom left')):
+  @property
+  def width(self):
+    return self.right - self.left
+
+  @property
+  def height(self):
+    return self.bottom - self.top

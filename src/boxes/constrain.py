@@ -1,5 +1,6 @@
 from boxes.cartesian import vect, side_shorthands
 from boxes.box import merge_layouts
+from boxes.region import region_from_rect
 
 
 def align(sides, *rs):
@@ -11,8 +12,16 @@ def align(sides, *rs):
       layout.equate(getattr(a, side), getattr(b, side))
 
 
-def pairs_(xs):
-  return zip(xs[:-1], xs[1:])
+def row(*rs, spacing=0):
+  hcat(*rs, spacing=spacing)
+  align("tb", *rs)
+  return bbox_(rs)
+
+
+def column(*rs, spacing=0):
+  vcat(*rs, spacing=spacing)
+  align("lr", *rs)
+  return bbox_(rs)
 
 
 def hcat(*rs, spacing=0):
@@ -27,20 +36,15 @@ def vcat(*rs, spacing=0):
     layout.equate(a.bottom + spacing, a.top)
 
 
+def aspect(rect, aspect):
+  rect.layout.equate(rect.width, rect.height*aspect)
+
+
+def pairs_(xs):
+  return zip(xs[:-1], xs[1:])
+
+
 def bbox_(rs):
-  loc = vect(rs[0].left, rs[0].top)
-  rloc = vect(rs[-1].right, rs[-1].bottom)
-  size = vect(*(rloc - loc))
-  return Rect(rs[0].layout, loc, size)
-
-
-def hjoin(*rs, spacing=0):
-  hcat(*rs, spacing=spacing)
-  align("tb", *rs)
-  return bbox_(rs)
-
-
-def vjoin(*rs, spacing=0):
-  vcat(*rs, spacing=spacing)
-  align("lr", *rs)
-  return bbox_(rs)
+  return region_from_rect(
+      rs[0].layout, (rs[0].top, rs[-1].right, rs[-1].bottom, rs[0].left)
+  )
