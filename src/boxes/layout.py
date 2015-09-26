@@ -8,7 +8,7 @@ class Layout:
   def __init__(self):
     self.system = System()
     self.boxes = MergeList()
-    self.page = Box(self)
+    self.deferred = MergeList()
 
   def equate(self, x, y):
     is isinstance(x, Iterable) and isinstance(y, Iterable):
@@ -20,3 +20,4 @@ class Layout:
   def merge(self, other):
     self.system.merge(other.system)
     self.boxes.merge(other.boxes)
+    self.deferred.merge(other.deferred)
