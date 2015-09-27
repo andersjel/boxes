@@ -1,6 +1,5 @@
 from boxes.cartesian import vect, side_shorthands
-from boxes.box import merge_layouts
-from boxes.region import Region
+from boxes.region import Region, merge_layouts
 
 
 def align(sides, *rs):
@@ -38,6 +37,14 @@ def vcat(*rs, spacing=0):
 
 def aspect(rect, aspect):
   rect.layout.equate(rect.width, rect.height*aspect)
+
+
+def width(self, width):
+  rect.layout.equate(rect.width, width)
+
+
+def height(self, height):
+  rect.layout.equate(rect.height, height)
 
 
 def pairs_(xs):
