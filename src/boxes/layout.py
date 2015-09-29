@@ -11,7 +11,7 @@ class Layout:
     self.deferred = MergeList()
 
   def equate(self, x, y):
-    is isinstance(x, Iterable) and isinstance(y, Iterable):
+    if isinstance(x, Iterable) and isinstance(y, Iterable):
       for x_, y_ in zip(x, y):
         self.equate(x_, y_)
     else:
@@ -21,3 +21,15 @@ class Layout:
     self.system.merge(other.system)
     self.boxes.merge(other.boxes)
     self.deferred.merge(other.deferred)
+
+  def solve(self):
+    for func in self.deferred:
+      func()
+
+    sls = self.system.solve(approx=True)
+    self.system.clear()
+
+    for b in self.boxes:
+      b.update(sls)
+
+    return sls

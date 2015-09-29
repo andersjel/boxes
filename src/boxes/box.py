@@ -21,3 +21,9 @@ class Box(Region):
       constrain.width(self, width)
     if height is not None:
       constrain.height(self, height)
+
+  def solve(self):
+    return self.layout.solve()
+
+  def update(self, solution):
+    self.rect = solution.eval(self.rect)

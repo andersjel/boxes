@@ -1,4 +1,4 @@
-from boxes.cartesian import vect, side_shorthands
+from boxes.cartesian import Vect, side_shorthands
 from boxes.region import Region, merge_layouts
 
 
@@ -39,11 +39,11 @@ def aspect(rect, aspect):
   rect.layout.equate(rect.width, rect.height*aspect)
 
 
-def width(self, width):
+def width(rect, width):
   rect.layout.equate(rect.width, width)
 
 
-def height(self, height):
+def height(rect, height):
   rect.layout.equate(rect.height, height)
 
 

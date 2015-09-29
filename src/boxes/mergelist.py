@@ -3,10 +3,10 @@ import collections.abc
 
 class MergeList(collections.abc.MutableSequence):
 
-  def __init__(self, vals=[]):
+  def __init__(self):
     self.parent_ = None
     self.rank_ = 0
-    self.vals_ = vals
+    self.vals_ = []
 
   @property
   def root_(self):
@@ -54,3 +54,6 @@ class MergeList(collections.abc.MutableSequence):
 
   def insert(self, *args):
     self.items_.insert(*args)
+
+  def clear(self):
+    self.items_.clear()

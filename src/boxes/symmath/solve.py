@@ -7,10 +7,11 @@ from boxes.symmath.expr import Expr
 class Solution(dict):
 
   def eval(self, expr):
-    if isinstance(expr, tuple):
-      return tuple(self.eval(x) for x in expr)
-    elif isinstance(expr, list):
-      return [self.eval(x) for x in expr]
+    if isinstance(expr, tuple) or isinstance(expr, list):
+      if hasattr(expr, '_make'):
+        # This is a named tuple
+        return expr.__class__._make(self.eval(x) for x in expr)
+      return expr.__class__(self.eval(x) for x in expr)
     expr = Expr(expr)
     val = 0
     for k, v in expr.terms.items():
