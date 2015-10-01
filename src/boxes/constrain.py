@@ -26,13 +26,13 @@ def column(*rs, spacing=0):
 def hcat(*rs, spacing=0):
   layout = merge_layouts(rs)
   for a, b in pairs_(rs):
-    layout.equate(a.right + spacing, a.left)
+    layout.equate(a.right + spacing, b.left)
 
 
 def vcat(*rs, spacing=0):
   layout = merge_layouts(rs)
   for a, b in pairs_(rs):
-    layout.equate(a.bottom + spacing, a.top)
+    layout.equate(a.bottom + spacing, b.top)
 
 
 def aspect(rect, aspect):
@@ -52,6 +52,7 @@ def pairs_(xs):
 
 
 def bbox_(rs):
+  layout = merge_layouts(rs)
   return Region(
-      rs[0].layout, (rs[0].top, rs[-1].right, rs[-1].bottom, rs[0].left)
+      layout, (rs[0].top, rs[-1].right, rs[-1].bottom, rs[0].left)
   )

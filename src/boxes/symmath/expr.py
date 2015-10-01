@@ -62,8 +62,52 @@ class Expr:
   def __repr__(self):
     return 'Expr(terms={!r})'.format(self.terms)
 
+  def __str__(self):
+    acc = ""
+
+    first = True
+    for symbol, val in self.terms.items():
+      if val == 0:
+        continue
+
+      # Print sign
+      if first:
+        if val <= 0:
+          acc += "−"
+      else:
+        if val <= 0:
+          acc += " − "
+        else:
+          acc += " + "
+      first = False
+
+      has_symbol = symbol != 1
+
+      # Print number and multiplication sign
+      if abs(val) != 1:
+        acc += str(abs(val))
+        if has_symbol:
+          acc += "×"
+
+      # Print symbol
+      if has_symbol:
+        acc += str(symbol)
+
+    return acc
+
+
+class Unnamed_:
+  register = {}
+  count = 0
+
+  def __str__(self):
+    if self not in Unnamed_.register:
+      Unnamed_.register[self] = "s" + str(Unnamed_.count)
+      Unnamed_.count += 1
+    return Unnamed_.register[self]
+
 
 def sym(name=None):
   if name is None:
-    name = object()
+    name = Unnamed_()
   return Expr(terms={name: 1})

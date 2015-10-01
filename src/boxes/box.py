@@ -1,5 +1,5 @@
 from boxes.symmath import sym
-from boxes.cartesian import Rect
+from boxes.cartesian import Vect, Rect
 from boxes.layout import Layout
 from boxes.region import Region
 from boxes import constrain
@@ -22,7 +22,9 @@ class Box(Region):
     if height is not None:
       constrain.height(self, height)
 
-  def solve(self):
+  def solve(self, fix_upper_left=True):
+    if fix_upper_left:
+      self.layout.equate(self.loc, Vect(0, 0))
     return self.layout.solve()
 
   def update(self, solution):

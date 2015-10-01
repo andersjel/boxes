@@ -23,3 +23,9 @@ class System:
 
   def clear(self):
     self.equations.clear()
+
+  def __str__(self):
+    rval = ""
+    for expr in self.equations:
+      rval += str(expr) + " = 0\n"
+    return rval

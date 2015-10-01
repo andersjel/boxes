@@ -40,10 +40,10 @@ class Grid(Box):
     return GridSlice(self, idx)
 
   def hspacing(self, i, length):
-    self.spacings_[0][i] = length
+    self.spacings_[1][i] = length
 
   def vspacing(self, i, length):
-    self.spacings_[1][i] = length
+    self.spacings_[0][i] = length
 
   def update(self, sls):
     super().update(sls)
@@ -52,8 +52,8 @@ class Grid(Box):
 
   def deferred_(self):
     for i in range(2):
-      size = self.offset_(i, self.dims_[i] + 1, True)
-      self.layout.equate(size, self.size[i])
+      size = self.offset_(i, self.dims_[i], True)
+      self.layout.equate(size, self.size[0 if i == 1 else 1])
       for x, y in zip(self.betweens_[i], self.spacings_[i]):
         self.layout.equate(x, y)
 
@@ -65,10 +65,10 @@ class GridSlice(Region):
     self.spec = _slice_or_index_to_spec(grid.dims_, idx)
     ((r0, r1), (c0, c1)) = self.spec
     rect = Rect(
-        grid.offset_(0, r0, True),
-        grid.offset_(1, c1, False),
-        grid.offset_(0, r1, False),
-        grid.offset_(1, c0, True),
+        grid.top + grid.offset_(0, r0, True),
+        grid.left + grid.offset_(1, c1, False),
+        grid.top + grid.offset_(0, r1, False),
+        grid.left + grid.offset_(1, c0, True),
     )
     Region.__init__(self, grid.layout, rect)
 
@@ -76,11 +76,11 @@ class GridSlice(Region):
     self.hspacing(l)
     self.vspacing(l)
 
-  def hspacing(self, l):
+  def vspacing(self, l):
     for i in range(self.spec[0][0] + 1, self.spec[0][1]):
       self.grid.spacings_[0][i] = l
 
-  def vspacing(self, l):
+  def hspacing(self, l):
     for i in range(self.spec[1][0] + 1, self.spec[1][1]):
       self.grid.spacings_[1][i] = l
 
@@ -89,7 +89,7 @@ def _slice_or_index_to_spec(dims, idx):
   if not len(idx) == 2:
     raise ValueError
   rval = []
-  for i, dim in zip(reversed(idx), dims):
+  for i, dim in zip(idx, dims):
     if isinstance(i, slice):
       indices = i.indices(dim)
       if indices[2] != 1:
