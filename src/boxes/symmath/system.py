@@ -16,10 +16,9 @@ class System:
 
   def solve(self, approx=False):
     if approx:
-      sol = solve_approx(self.equations)
+      return solve_approx(self.equations)
     else:
-      sol = solve(self.equations)
-    return sol
+      return solve(self.equations)
 
   def clear(self):
     self.equations.clear()

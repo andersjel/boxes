@@ -1,6 +1,17 @@
 import operator
 
 
+class UnnamedSymbol:
+  register = {}
+  count = 0
+
+  def __str__(self):
+    if self not in UnnamedSymbol.register:
+      UnnamedSymbol.register[self] = "s" + str(UnnamedSymbol.count)
+      UnnamedSymbol.count += 1
+    return UnnamedSymbol.register[self]
+
+
 class Expr:
 
   def __init__(self, other=None, terms=None):
@@ -17,7 +28,7 @@ class Expr:
     else:
       self.terms = {}
 
-  def f_(self, op, other):
+  def _f(self, op, other):
     r = Expr(self)
     for k, v in Expr(other).terms.items():
       x = r.terms.get(k, 0)
@@ -25,10 +36,10 @@ class Expr:
     return r
 
   def __add__(self, other):
-    return self.f_(operator.add, other)
+    return self._f(operator.add, other)
 
   def __sub__(self, other):
-    return self.f_(operator.sub, other)
+    return self._f(operator.sub, other)
 
   def __radd__(self, other):
     return self + other
@@ -36,13 +47,13 @@ class Expr:
   def __rsub__(self, other):
     return - self + other
 
-  def __neg__(self):
+  def __ne_g_(self):
     return self * (-1)
 
   def __pos__(self):
     return self
 
-  def g_(self, op, other):
+  def _g(self, op, other):
     r = Expr(self)
     if isinstance(other, Expr):
       raise RuntimeError
@@ -51,10 +62,10 @@ class Expr:
     return r
 
   def __mul__(self, other):
-    return self.g_(operator.mul, other)
+    return self._g(operator.mul, other)
 
   def __truediv__(self, other):
-    return self.g_(operator.truediv, other)
+    return self._g(operator.truediv, other)
 
   def __rmul__(self, other):
     return self * other
@@ -96,18 +107,7 @@ class Expr:
     return acc
 
 
-class Unnamed_:
-  register = {}
-  count = 0
-
-  def __str__(self):
-    if self not in Unnamed_.register:
-      Unnamed_.register[self] = "s" + str(Unnamed_.count)
-      Unnamed_.count += 1
-    return Unnamed_.register[self]
-
-
 def sym(name=None):
   if name is None:
-    name = Unnamed_()
+    name = UnnamedSymbol()
   return Expr(terms={name: 1})

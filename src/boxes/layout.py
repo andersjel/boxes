@@ -1,5 +1,5 @@
 from boxes.symmath import System
-from boxes.mergelist import MergeList
+from boxes.merge import MergeList, MergeDict
 from collections.abc import Iterable
 
 
@@ -7,7 +7,7 @@ class Layout:
 
   def __init__(self):
     self.system = System()
-    self.boxes = MergeList()
+    self.solution = MergeDict()
     self.deferred = MergeList()
 
   def equate(self, x, y):
@@ -19,7 +19,7 @@ class Layout:
 
   def merge(self, other):
     self.system.merge(other.system)
-    self.boxes.merge(other.boxes)
+    self.solution.merge(other.solution)
     self.deferred.merge(other.deferred)
 
   def solve(self):
@@ -29,7 +29,4 @@ class Layout:
     sls = self.system.solve(approx=True)
     self.system.clear()
 
-    for b in self.boxes:
-      b.update(sls)
-
-    return sls
+    self.solution.update(sls)

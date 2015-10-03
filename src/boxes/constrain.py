@@ -14,24 +14,24 @@ def align(sides, *rs):
 def row(*rs, spacing=0):
   hcat(*rs, spacing=spacing)
   align("tb", *rs)
-  return bbox_(rs)
+  return _bbox(rs)
 
 
 def column(*rs, spacing=0):
   vcat(*rs, spacing=spacing)
   align("lr", *rs)
-  return bbox_(rs)
+  return _bbox(rs)
 
 
 def hcat(*rs, spacing=0):
   layout = merge_layouts(rs)
-  for a, b in pairs_(rs):
+  for a, b in _pairs(rs):
     layout.equate(a.right + spacing, b.left)
 
 
 def vcat(*rs, spacing=0):
   layout = merge_layouts(rs)
-  for a, b in pairs_(rs):
+  for a, b in _pairs(rs):
     layout.equate(a.bottom + spacing, b.top)
 
 
@@ -47,11 +47,11 @@ def height(rect, height):
   rect.layout.equate(rect.height, height)
 
 
-def pairs_(xs):
+def _pairs(xs):
   return zip(xs[:-1], xs[1:])
 
 
-def bbox_(rs):
+def _bbox(rs):
   layout = merge_layouts(rs)
   return Region(
       layout, (rs[0].top, rs[-1].right, rs[-1].bottom, rs[0].left)

@@ -4,25 +4,29 @@ import warnings
 from boxes.symmath.expr import Expr
 
 
-class Solution(dict):
+def substitute(solution, expr, partial=False):
+  if isinstance(expr, tuple) or isinstance(expr, list):
+    if hasattr(expr, '_make'):
+      # This is a named tuple
+      return expr.__class__._make(substitute(solution, x) for x in expr)
+    return expr.__class__(substitute(solution, x) for x in expr)
+  expr = Expr(expr)
+  val = 0
+  for k, v in expr.terms.items():
+    if k == 1:
+      val += v
+    else:
+      try:
+        val += solution[k] * v
+      except KeyError:
+        if partial:
+          val += Expr(terms={k: v})
+        else:
+          raise
+  return val
 
-  def eval(self, expr):
-    if isinstance(expr, tuple) or isinstance(expr, list):
-      if hasattr(expr, '_make'):
-        # This is a named tuple
-        return expr.__class__._make(self.eval(x) for x in expr)
-      return expr.__class__(self.eval(x) for x in expr)
-    expr = Expr(expr)
-    val = 0
-    for k, v in expr.terms.items():
-      if k == 1:
-        val += v
-      else:
-        val += self[k] * v
-    return val
 
-
-def mk_system_(expressions):
+def _mk_system(expressions):
   symbols = set()
   expressions = list(expressions)
   for eq in expressions:
@@ -37,13 +41,13 @@ def mk_system_(expressions):
 
 
 def solve(expressions):
-  symbols, a, b = mk_system_(expressions)
+  symbols, a, b = _mk_system(expressions)
   if len(expressions) != len(symbols):
     raise RuntimeError(
         'Number of equation must equal number of symbols.'
     )
   x = numpy.linalg.solve(a, b)
-  return Solution(zip(symbols, x))
+  return dict(zip(symbols, x))
 
 
 class SymmathWarning(RuntimeWarning):
@@ -51,7 +55,7 @@ class SymmathWarning(RuntimeWarning):
 
 
 def solve_approx(expressions):
-  symbols, a, b = mk_system_(expressions)
+  symbols, a, b = _mk_system(expressions)
   sol = numpy.linalg.lstsq(a, b)
   x, residuals, rank, _ = sol
   if rank != len(symbols):
@@ -61,4 +65,4 @@ def solve_approx(expressions):
     )
   if residuals > 1e-15:
     warnings.warn('System is over-constrained', SymmathWarning)
-  return Solution(zip(symbols, sol[0]))
+  return dict(zip(symbols, sol[0]))
