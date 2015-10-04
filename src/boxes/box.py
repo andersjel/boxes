@@ -7,16 +7,24 @@ import itertools
 
 class Box:
 
-  def __init__(self, layout=None, aspect=None, width=None, height=None):
+  _rect_attrs = set('width height top right bottom left loc size'.split())
+
+  def __init__(self, layout=None, aspect=None, rect=None, **kwargs):
     self.layout = layout if layout else Layout()
-    self._rect = Rect(sym(), sym(), sym(), sym())
+    self._rect = Rect(rect) if rect else Rect(sym(), sym(), sym(), sym())
+
+    for k, v in kwargs:
+      if k in self._rect_attrs:
+        if v is not None:
+          self.layout.equate(getattr(self.rect, k), v)
+        else:
+          raise TypeError(
+              "Box(...) got an unexpected keyword argument: {}"
+              .format(repr(k))
+          )
 
     if aspect is not None:
       constrain.aspect(self, aspect)
-    if width is not None:
-      constrain.width(self, width)
-    if height is not None:
-      constrain.height(self, height)
 
   @property
   def rect(self):
@@ -43,21 +51,21 @@ class Box:
         for x, s, y in
         zip(self.rect, (1, -1, -1, 1), offsets)
     )
-    return Box(self.layout, rect)
+    return Box(layout=self.layout, rect=rect)
 
   def surround(self, *args):
     return self.pad(*(-x for x in args))
 
   def __getattr__(self, attr):
-    if attr in 'width height top right bottom left loc size'.split():
+    if attr in self._rect_attrs:
       return getattr(self.rect, attr)
     raise AttributeError("{} object has no attribute {}.".format(
         repr(self.__class__.__name__), repr(attr)
     ))
 
 
-def merge_layouts(rs):
-  r0 = rs[0]
-  for r in rs[1:]:
+def merge_layouts(bs):
+  r0 = bs[0]
+  for r in bs[1:]:
     r0.layout.merge(r.layout)
   return r0.layout

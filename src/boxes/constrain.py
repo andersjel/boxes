@@ -1,58 +1,68 @@
 from boxes.cartesian import Vect, side_shorthands
-from boxes.region import Region, merge_layouts
+from boxes.box import Box, merge_layouts
 
 
-def align(sides, *rs):
-  layout = merge_layouts(rs)
-  a = rs[0]
-  for b in rs[1:]:
+def align(sides, *bs):
+  layout = merge_layouts(bs)
+  a = bs[0]
+  for b in bs[1:]:
     for side_shorthand in sides:
       side = side_shorthands[side_shorthand]
       layout.equate(getattr(a, side), getattr(b, side))
 
 
-def row(*rs, spacing=0):
-  hcat(*rs, spacing=spacing)
-  align("tb", *rs)
-  return _bbox(rs)
+def row(*bs, spacing=0):
+  hcat(*bs, spacing=spacing)
+  align("tb", *bs)
+  return _bbox(bs)
 
 
-def column(*rs, spacing=0):
-  vcat(*rs, spacing=spacing)
-  align("lr", *rs)
-  return _bbox(rs)
+def column(*bs, spacing=0):
+  vcat(*bs, spacing=spacing)
+  align("lr", *bs)
+  return _bbox(bs)
 
 
-def hcat(*rs, spacing=0):
-  layout = merge_layouts(rs)
-  for a, b in _pairs(rs):
+def hcat(*bs, spacing=0):
+  layout = merge_layouts(bs)
+  for a, b in _pairs(bs):
     layout.equate(a.right + spacing, b.left)
 
 
-def vcat(*rs, spacing=0):
-  layout = merge_layouts(rs)
-  for a, b in _pairs(rs):
+def vcat(*bs, spacing=0):
+  layout = merge_layouts(bs)
+  for a, b in _pairs(bs):
     layout.equate(a.bottom + spacing, b.top)
 
 
-def aspect(rect, aspect):
-  rect.layout.equate(rect.width, rect.height*aspect)
+def aspect(box, aspect):
+  box.layout.equate(box.width, box.height*aspect)
 
 
-def width(rect, width):
-  rect.layout.equate(rect.width, width)
+def width(box, width):
+  box.layout.equate(box.width, width)
 
 
-def height(rect, height):
-  rect.layout.equate(rect.height, height)
+def height(box, height):
+  box.layout.equate(box.height, height)
+
+
+def size(box, size):
+  box.layout.equate(box.size, size)
+
+
+# TODO
+# Change aspect, width, height, size so the call looks like:
+# height(height, *bs) or height(*bs).
 
 
 def _pairs(xs):
   return zip(xs[:-1], xs[1:])
 
 
-def _bbox(rs):
-  layout = merge_layouts(rs)
-  return Region(
-      layout, (rs[0].top, rs[-1].right, rs[-1].bottom, rs[0].left)
+def _bbox(bs):
+  layout = merge_layouts(bs)
+  return Box(
+      layout=layout,
+      rect=(bs[0].top, bs[-1].right, bs[-1].bottom, bs[0].left),
   )
