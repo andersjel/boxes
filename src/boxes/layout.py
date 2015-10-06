@@ -1,5 +1,5 @@
-from boxes.symmath import System
-from boxes.merge import MergeList, MergeDict
+from symmath import System
+from symmath.merge import MergeList, MergeDict
 from collections.abc import Iterable
 
 

@@ -1,7 +1,7 @@
 import numpy as np
 import numpy.linalg
 import warnings
-from boxes.symmath.expr import Expr
+from symmath.expr import Expr
 
 
 def substitute(solution, expr, partial=False):

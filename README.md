@@ -57,7 +57,7 @@ example
 
 ## How it works
 
-The *boxes* module is built on top of *boxes.symmath* which is a library for
+The *boxes* module is built on top of *symmath* which is a library for
 cleanly expressing and solving systems of linear equations. *symmath* provides a
 class to represent linear expressions and this class emulates a numerical type.
 *numpy* is used by *symmath* to do the actual work of solving the linear systems

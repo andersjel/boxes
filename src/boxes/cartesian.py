@@ -10,13 +10,6 @@ class Vect(namedtuple('Vect', 'x y')):
     return Vect(u - v for u, v in zip(self, other))
 
 
-side_shorthands = {
-    't': 'top',
-    'b': 'bottom',
-    'l': 'left',
-    'r': 'right',
-}
-
 class Rect(namedtuple('Rect', 'top right bottom left')):
   @property
   def width(self):

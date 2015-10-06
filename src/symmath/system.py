@@ -1,6 +1,6 @@
-from boxes.symmath.expr import Expr
-from boxes.symmath.solve import solve, solve_approx
-from boxes.merge import MergeList
+from symmath.expr import Expr
+from symmath.solve import solve, solve_approx
+from symmath.merge import MergeList
 
 
 class System:

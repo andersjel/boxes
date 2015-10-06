@@ -1,6 +1,6 @@
 from boxes.cartesian import Vect, Rect
 from boxes.layout import Layout
-from boxes.symmath import sym, substitute
+from symmath import sym, substitute
 import itertools
 
 

@@ -1,4 +1,4 @@
-from boxes.cartesian import Vect, side_shorthands
+from boxes.cartesian import Vect
 from boxes.box import Box, merge_layouts
 
 
@@ -7,7 +7,12 @@ def align(sides, *boxes):
   a = boxes[0]
   for b in boxes[1:]:
     for side_shorthand in sides:
-      side = side_shorthands[side_shorthand]
+      side = {
+          't': 'top',
+          'b': 'bottom',
+          'l': 'left',
+          'r': 'right',
+      }[side_shorthand]
       layout.equate(getattr(a, side), getattr(b, side))
 
 
