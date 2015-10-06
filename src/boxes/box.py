@@ -1,4 +1,3 @@
-from boxes import constrain
 from boxes.cartesian import Vect, Rect
 from boxes.layout import Layout
 from boxes.symmath import sym, substitute
@@ -11,9 +10,9 @@ class Box:
 
   def __init__(self, layout=None, aspect=None, rect=None, **kwargs):
     self.layout = layout if layout else Layout()
-    self._rect = Rect(rect) if rect else Rect(sym(), sym(), sym(), sym())
+    self._rect = Rect._make(rect) if rect else Rect(sym(), sym(), sym(), sym())
 
-    for k, v in kwargs:
+    for k, v in kwargs.items():
       if k in self._rect_attrs:
         if v is not None:
           self.layout.equate(getattr(self.rect, k), v)
@@ -24,7 +23,8 @@ class Box:
           )
 
     if aspect is not None:
-      constrain.aspect(self, aspect)
+      import boxes.constrain
+      boxes.constrain.aspect(aspect, self)
 
   @property
   def rect(self):

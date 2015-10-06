@@ -8,8 +8,12 @@ def substitute(solution, expr, partial=False):
   if isinstance(expr, tuple) or isinstance(expr, list):
     if hasattr(expr, '_make'):
       # This is a named tuple
-      return expr.__class__._make(substitute(solution, x) for x in expr)
-    return expr.__class__(substitute(solution, x) for x in expr)
+      return expr.__class__._make(
+          substitute(solution, x, partial) for x in expr
+      )
+    return expr.__class__(
+        substitute(solution, x, partial) for x in expr
+    )
   expr = Expr(expr)
   val = 0
   for k, v in expr.terms.items():
@@ -46,6 +50,8 @@ def solve(expressions):
     raise RuntimeError(
         'Number of equation must equal number of symbols.'
     )
+  if not symbols:
+    return {}
   x = numpy.linalg.solve(a, b)
   return dict(zip(symbols, x))
 
@@ -56,6 +62,8 @@ class SymmathWarning(RuntimeWarning):
 
 def solve_approx(expressions):
   symbols, a, b = _mk_system(expressions)
+  if not symbols:
+    return {}
   sol = numpy.linalg.lstsq(a, b)
   x, residuals, rank, _ = sol
   if rank != len(symbols):

@@ -1,11 +1,10 @@
 import cairo
-from boxes.region import merge_layouts
+from boxes import merge_layouts
 
 
 def display(filename, figure, boxes, dots_per_unit=30):
-  # TODO solve should be idempotent
-  # layout = merge_layouts(boxes)
-  # layout.solve()
+  figure.layout.merge(merge_layouts(boxes))
+  figure.solve()
 
   width, height = (int(x * dots_per_unit + 0.5) for x in figure.size)
   surf = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)

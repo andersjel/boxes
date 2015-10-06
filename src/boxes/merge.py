@@ -17,7 +17,7 @@ class Merge:
 
   @property
   def _content(self):
-    return self.__parent.__content
+    return self.__root.__content
 
   def merge(self, other):
     x = self.__root
@@ -73,6 +73,10 @@ class MergeDict(Merge, collections.abc.MutableMapping):
 
   def __init__(self):
     Merge.__init__(self, {})
+
+  @staticmethod
+  def _combine(x, y):
+    return dict(x, **y)
 
   def __getitem__(self, i):
     return self._content[i]
