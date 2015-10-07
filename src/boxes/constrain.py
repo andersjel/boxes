@@ -2,6 +2,13 @@ from boxes.cartesian import Vect
 from boxes.box import Box, merge_layouts
 
 
+__all__ = []
+def public(f):
+  __all__.append(f.__name__)
+  return f
+
+
+@public
 def align(sides, *boxes):
   layout = merge_layouts(boxes)
   a = boxes[0]
@@ -16,30 +23,35 @@ def align(sides, *boxes):
       layout.equate(getattr(a, side), getattr(b, side))
 
 
+@public
 def row(*boxes, spacing=0):
   hcat(*boxes, spacing=spacing)
   align("tb", *boxes)
   return _bbox(boxes)
 
 
+@public
 def column(*boxes, spacing=0):
   vcat(*boxes, spacing=spacing)
   align("lr", *boxes)
   return _bbox(boxes)
 
 
+@public
 def hcat(*boxes, spacing=0):
   layout = merge_layouts(boxes)
   for a, b in _pairs(boxes):
     layout.equate(a.right + spacing, b.left)
 
 
+@public
 def vcat(*boxes, spacing=0):
   layout = merge_layouts(boxes)
   for a, b in _pairs(boxes):
     layout.equate(a.bottom + spacing, b.top)
 
 
+@public
 def aspect(aspect, *boxes):
   if isinstance(aspect, Box):
     aspect = aspect.aspect
@@ -47,6 +59,7 @@ def aspect(aspect, *boxes):
     box.layout.equate(box.width, box.height*aspect)
 
 
+@public
 def width(width, *boxes):
   if isinstance(width, Box):
     width = width.width
@@ -54,6 +67,7 @@ def width(width, *boxes):
     box.layout.equate(box.width, width)
 
 
+@public
 def height(height, *boxes):
   if isinstance(height, Box):
     height = height.height
@@ -61,6 +75,7 @@ def height(height, *boxes):
     box.layout.equate(box.height, height)
 
 
+@public
 def size(size, *boxes):
   if isinstance(size, Box):
     size = size.size

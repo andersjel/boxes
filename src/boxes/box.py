@@ -56,12 +56,19 @@ class Box:
   def surround(self, *args):
     return self.pad(*(-x for x in args))
 
-  def __getattr__(self, attr):
-    if attr in self._rect_attrs:
-      return getattr(self.rect, attr)
-    raise AttributeError("{} object has no attribute {}.".format(
-        repr(self.__class__.__name__), repr(attr)
-    ))
+
+def _add_attr(attr):
+  def getter(self):
+    return getattr(self.rect, attr)
+
+  getter.__name__ = attr
+  setattr(Box, attr, property(getter))
+
+
+for attr in Box._rect_attrs:
+  _add_attr(attr)
+del attr
+del _add_attr
 
 
 def merge_layouts(bs):
