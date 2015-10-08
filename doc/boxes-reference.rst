@@ -1,5 +1,5 @@
-Reference: boxes
-================
+Reference to boxes
+==================
 
 .. automodule:: boxes
   :members:
