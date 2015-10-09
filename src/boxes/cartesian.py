@@ -1,3 +1,8 @@
+"""
+Module: boxes.cartesian
+-----------------------
+"""
+
 from collections import namedtuple
 
 

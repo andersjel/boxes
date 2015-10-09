@@ -1,5 +1,10 @@
+"""
+Module: boxes.constrain
+-----------------------
+"""
+
 from boxes.cartesian import Vect
-from boxes.box import Box, merge_layouts
+from boxes.box import Box, entangle
 
 
 __all__ = []
@@ -10,7 +15,7 @@ def public(f):
 
 @public
 def align(sides, *boxes):
-  layout = merge_layouts(boxes)
+  layout = entangle(*boxes)
   a = boxes[0]
   for b in boxes[1:]:
     for side_shorthand in sides:
@@ -39,22 +44,20 @@ def column(*boxes, spacing=0):
 
 @public
 def hcat(*boxes, spacing=0):
-  layout = merge_layouts(boxes)
+  layout = entangle(*boxes)
   for a, b in _pairs(boxes):
     layout.equate(a.right + spacing, b.left)
 
 
 @public
 def vcat(*boxes, spacing=0):
-  layout = merge_layouts(boxes)
+  layout = entangle(*boxes)
   for a, b in _pairs(boxes):
     layout.equate(a.bottom + spacing, b.top)
 
 
 @public
 def aspect(aspect, *boxes):
-  if isinstance(aspect, Box):
-    aspect = aspect.aspect
   for box in boxes:
     box.layout.equate(box.width, box.height*aspect)
 
@@ -88,7 +91,7 @@ def _pairs(xs):
 
 
 def _bbox(boxes):
-  layout = merge_layouts(boxes)
+  layout = entangle(*boxes)
   return Box(
       layout=layout,
       rect=(boxes[0].top, boxes[-1].right, boxes[-1].bottom, boxes[0].left),

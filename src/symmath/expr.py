@@ -1,17 +1,6 @@
 import operator
 
 
-class UnnamedSymbol:
-  register = {}
-  count = 0
-
-  def __str__(self):
-    if self not in UnnamedSymbol.register:
-      UnnamedSymbol.register[self] = "s" + str(UnnamedSymbol.count)
-      UnnamedSymbol.count += 1
-    return UnnamedSymbol.register[self]
-
-
 class Expr:
 
   def __init__(self, other=None, terms=None):
@@ -111,3 +100,14 @@ def sym(name=None):
   if name is None:
     name = UnnamedSymbol()
   return Expr(terms={name: 1})
+
+
+class UnnamedSymbol:
+  register = {}
+  count = 0
+
+  def __str__(self):
+    if self not in UnnamedSymbol.register:
+      UnnamedSymbol.register[self] = "s" + str(UnnamedSymbol.count)
+      UnnamedSymbol.count += 1
+    return UnnamedSymbol.register[self]

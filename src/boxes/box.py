@@ -1,3 +1,8 @@
+"""
+Module: boxes.box
+-----------------
+"""
+
 from boxes.cartesian import Vect, Rect
 from boxes.layout import Layout
 from symmath import sym, substitute
@@ -31,7 +36,7 @@ class Box:
     return substitute(self.layout.solution, self._rect, partial=True)
 
   def fix(self, other):
-    layout = merge_layouts((self, other))
+    layout = entangle(self, other)
     layout.equate(self.rect, other.rect)
 
   def solve(self, fix_upper_left=True):
@@ -71,8 +76,8 @@ del attr
 del _add_attr
 
 
-def merge_layouts(bs):
-  r0 = bs[0]
+def entangle(*bs):
+  layout = bs[0].layout
   for r in bs[1:]:
-    r0.layout.merge(r.layout)
-  return r0.layout
+    layout.merge(r.layout)
+  return layout
