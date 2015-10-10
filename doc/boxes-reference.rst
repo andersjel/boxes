@@ -3,8 +3,6 @@ Reference to boxes
 
 .. automodule:: boxes
 .. automodule:: boxes.box
-  :members:
-  :undoc-members:
 .. automodule:: boxes.cartesian
   :members:
   :undoc-members:
