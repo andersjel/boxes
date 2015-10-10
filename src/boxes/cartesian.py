@@ -14,20 +14,34 @@ class Vect(namedtuple('Vect', 'x y')):
   def __sub__(self, other):
     return Vect(u - v for u, v in zip(self, other))
 
+  def _symmath_substitute(self, f):
+    return Vect(f(x) for x in self)
 
-class Rect(namedtuple('Rect', 'top right bottom left')):
-  @property
-  def width(self):
-    return self.right - self.left
+  def _symmath_equate(self, other):
+    return zip(self, other)
 
-  @property
-  def height(self):
-    return self.bottom - self.top
 
-  @property
-  def loc(self):
-    return Vect(self.left, self.top)
+class Rect:
+  def __init__(self, top, right, bottom, left):
+    self.top = top
+    self.right = right
+    self.bottom = bottom
+    self.left = left
+    self.width = right - left
+    self.height = bottom - top
+    self.loc = Vect(left, top)
+    self.size = Vect(self.width, self.height)
 
-  @property
-  def size(self):
-    return Vect(self.width, self.height)
+  def _symmath_substitute(self, f):
+    return Rect(
+        f(self.top),
+        f(self.right),
+        f(self.bottom),
+        f(self.left),
+    )
+
+  def _symmath_equate(self, other):
+    yield self.top, other.top
+    yield self.right, other.right
+    yield self.bottom, other.bottom
+    yield self.left, other.left

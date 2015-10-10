@@ -1,16 +1,15 @@
 import numpy as np
 import numpy.linalg
 import warnings
+import functools
 from symmath.expr import Expr
 
 
 def substitute(solution, expr, partial=False):
+  if hasattr(expr, '_symmath_substitute'):
+    f = functools.partial(substitute, solution, partial=partial)
+    return expr._symmath_substitute(f)
   if isinstance(expr, tuple) or isinstance(expr, list):
-    if hasattr(expr, '_make'):
-      # This is a named tuple
-      return expr.__class__._make(
-          substitute(solution, x, partial) for x in expr
-      )
     return expr.__class__(
         substitute(solution, x, partial) for x in expr
     )

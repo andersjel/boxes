@@ -9,7 +9,11 @@ class System:
     self.equations = MergeList()
 
   def equate(self, a, b):
-    self.equations.append(Expr(a - b))
+    if hasattr(a, '_symmath_equate'):
+      for x, y in a._symmath_equate(b):
+        self.equate(x, y)
+    else:
+      self.equations.append(Expr(a - b))
 
   def merge(self, other):
     self.equations.merge(other.equations)

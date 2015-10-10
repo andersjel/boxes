@@ -3,7 +3,7 @@ Module: boxes.constrain
 -----------------------
 """
 
-from boxes.cartesian import Vect
+from boxes.cartesian import Vect, Rect
 from boxes.box import Box, entangle
 
 
@@ -94,5 +94,8 @@ def _bbox(boxes):
   layout = entangle(*boxes)
   return Box(
       layout=layout,
-      rect=(boxes[0].top, boxes[-1].right, boxes[-1].bottom, boxes[0].left),
+      top=boxes[0].top,
+      right=boxes[-1].right,
+      bottom=boxes[-1].bottom,
+      left=boxes[0].left,
   )

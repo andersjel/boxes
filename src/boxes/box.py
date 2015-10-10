@@ -15,7 +15,7 @@ class Box:
 
   def __init__(self, layout=None, aspect=None, rect=None, **kwargs):
     self.layout = layout if layout else Layout()
-    self._rect = Rect._make(rect) if rect else Rect(sym(), sym(), sym(), sym())
+    self._rect = rect if rect else Rect(sym(), sym(), sym(), sym())
 
     for k, v in kwargs.items():
       if k in self._rect_attrs:
@@ -50,11 +50,12 @@ class Box:
           'Box.pad(..) takes at most 4 arguments ({} was given).'
           .format(len(args))
       )
-    offsets = itertools.islice(itertools.cycle(args), 4)
-    rect = Rect._make(
-        x + s * y
-        for x, s, y in
-        zip(self.rect, (1, -1, -1, 1), offsets)
+    top, right, bottom, left = itertools.islice(itertools.cycle(args), 4)
+    rect = Rect(
+      top=self.rect.top + top,
+      right=self.rect.right - right,
+      bottom=self.rect.bottom - bottom,
+      left=self.rect.left + left,
     )
     return Box(layout=self.layout, rect=rect)
 
