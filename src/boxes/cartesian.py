@@ -20,6 +20,16 @@ class Vect(namedtuple('Vect', 'x y')):
   def _symmath_equate(self, other):
     return zip(self, other)
 
+  def __str__(self):
+    def rounded():
+      for x in self:
+        try:
+          # Round and add zero to remove negative zeros.
+          yield round(float(x), 6) + 0
+        except:
+          yield x
+    return "({}, {})".format(*rounded())
+
 
 class Rect:
   def __init__(self, top, right, bottom, left):

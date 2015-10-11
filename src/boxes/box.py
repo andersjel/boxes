@@ -4,14 +4,14 @@ Module: boxes.box
 
 .. autoclass:: Box
 
-  **Methods:**
+  .. rubric:: Methods
 
   .. automethod:: solve
   .. automethod:: fix
   .. automethod:: pad
   .. automethod:: surround
 
-  **Properties:**
+  .. rubric:: Properties
 
   .. autoattribute:: rect
   .. attribute:: width, height, top, right, bottom, left, loc, and size
@@ -110,8 +110,43 @@ class Box:
   def pad(self, *args):
     """
 
-      Construct a new box by...
+      Construct a new box similar to this, but smaller by the given amount.
 
+      The method can be called in four different ways (similar to how margins
+      and padding is specified in *css* files):
+
+      * :samp:`box.pad({all})`
+      * :samp:`box.pad({vert}, {hor})`
+      * :samp:`box.pad({top}, {hor}, {bottom})`
+      * :samp:`box.pad({top}, {right}, {bottom}, {left})`
+
+      .. rubric:: Simple example
+
+      .. doctest::
+
+        >>> from boxes import *
+        >>> outer_box = Box(width=10)
+        >>> inner_box = Box(height=4)
+        >>> outer_box.pad(0.5).fix(inner_box)
+        >>> outer_box.solve()
+        >>> print(outer_box.loc, outer_box.size)
+        (0.0, 0.0) (10.0, 5.0)
+        >>> print(inner_box.loc, inner_box.size)
+        (0.5, 0.5) (9.0, 4.0)
+
+      .. rubric:: Center a box inside another
+
+      .. doctest::
+
+        >>> from boxes import *
+        >>> outer_box = Box(size=(6, 5))
+        >>> inner_box = Box(size=(4, 4))
+        >>> outer_box.pad(sym(), sym()).fix(inner_box)
+        >>> outer_box.solve()
+        >>> print(outer_box.loc, outer_box.size)
+        (0.0, 0.0) (6.0, 5.0)
+        >>> print(inner_box.loc, inner_box.size)
+        (1.0, 0.5) (4.0, 4.0)
     """
     if len(args) > 4:
       raise TypeError(
@@ -130,7 +165,7 @@ class Box:
   def surround(self, *args):
     """
 
-      Similar to :func:`pad`, but ...
+      Similar to :func:`pad`, but the arguments are negated.
 
     """
     return self.pad(*(-x for x in args))
@@ -151,6 +186,30 @@ del _add_attr
 
 
 def entangle(*bs):
+  """
+
+    Combines the layout in *bs* using :func:`boxes.layout.Layout.merge` and
+    returns the resulting layout.
+
+    This is needed when making custom constraints. Here is an example, setting
+    the width of ``box_1`` to twice the width of ``box_2``.
+
+    .. doctest::
+
+      >>> from boxes import *
+      >>> box_1 = Box()
+      >>> box_2 = Box()
+      >>> layout = entangle(box_1, box_2)
+      >>> layout.equate(box_1.width, 2 * box_2.width)
+      >>> figure = Box(size=(10, 5))
+      >>> figure.fix(constrain.row(box_1, box_2, spacing=1.0))
+      >>> figure.solve()
+      >>> print(box_1.width)
+      6.0
+      >>> print(box_2.width)
+      3.0
+
+  """
   layout = bs[0].layout
   for r in bs[1:]:
     layout.merge(r.layout)
