@@ -1,6 +1,6 @@
 """
-Module: boxes.layout
---------------------
+boxes.layout
+------------
 """
 
 from symmath import System

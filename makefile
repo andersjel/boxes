@@ -3,7 +3,7 @@ export PYTHONPATH
 
 py-files = $(shell find src/ -name '*.py')
 examples = $(patsubst %.py, %.svg, $(wildcard examples/*.py))
-doc-files = $(wildcard doc/*.rst) doc/conf.py
+doc-files = $(shell find doc/ -name '*.rst') doc/conf.py
 
 .PHONY: doc
 doc: doc/_build/stamp

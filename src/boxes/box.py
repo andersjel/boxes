@@ -1,6 +1,6 @@
 """
-Module: boxes.box
------------------
+boxes.box
+---------
 
 .. autoclass:: Box
 

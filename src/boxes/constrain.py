@@ -1,6 +1,6 @@
 """
-Module: boxes.constrain
------------------------
+boxes.constrain
+---------------
 """
 
 from boxes.cartesian import Vect, Rect

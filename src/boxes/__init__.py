@@ -1,6 +1,6 @@
 """
-Module: boxes
--------------
+boxes
+-----
 
 Convenience reexports. Typing ``from boxes import *`` imports the following:
 

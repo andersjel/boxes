@@ -1,6 +1,6 @@
 """
-Module: boxes.display
----------------------
+boxes.display
+-------------
 """
 
 import cairo
