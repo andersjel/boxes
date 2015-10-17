@@ -32,6 +32,7 @@ class Vect(namedtuple('Vect', 'x y')):
 
 
 class Rect:
+
   def __init__(self, top, right, bottom, left):
     self.top = top
     self.right = right

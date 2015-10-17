@@ -155,10 +155,10 @@ class Box:
       )
     top, right, bottom, left = itertools.islice(itertools.cycle(args), 4)
     rect = Rect(
-      top=self.rect.top + top,
-      right=self.rect.right - right,
-      bottom=self.rect.bottom - bottom,
-      left=self.rect.left + left,
+        top=self.rect.top + top,
+        right=self.rect.right - right,
+        bottom=self.rect.bottom - bottom,
+        left=self.rect.left + left,
     )
     return Box(layout=self.layout, rect=rect)
 

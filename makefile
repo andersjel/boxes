@@ -22,6 +22,11 @@ examples: ${examples}
 examples/%.svg: examples/%.py ${py-files}
 	python $< $@
 
+.PHONY: pretty
+pretty:
+	autopep8 --indent-size 2 -ir src/
+
+.PHONY: clean
 clean:
 	rm -f examples/*.svg
 	rm -rf doc/_build

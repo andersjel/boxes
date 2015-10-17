@@ -8,6 +8,8 @@ from boxes.box import Box, entangle
 
 
 __all__ = []
+
+
 def public(f):
   __all__.append(f.__name__)
   return f
@@ -59,7 +61,7 @@ def vcat(*boxes, spacing=0):
 @public
 def aspect(aspect, *boxes):
   for box in boxes:
-    box.layout.equate(box.width, box.height*aspect)
+    box.layout.equate(box.width, box.height * aspect)
 
 
 @public

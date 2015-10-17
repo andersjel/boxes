@@ -23,7 +23,7 @@ def display(filename, figure, boxes, dots_per_unit=30):
   ctx.set_source_rgb(0.7, 0.8, 1.0)
   ctx.paint()
 
-  ctx.set_source_rgb(41/255, 128/255, 185/255)
+  ctx.set_source_rgb(41 / 255, 128 / 255, 185 / 255)
   for box in boxes:
     x, y = box.loc
     w, h = box.size
