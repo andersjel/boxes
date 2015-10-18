@@ -2,6 +2,10 @@
 boxes.box
 ---------
 
+.. autosummary::
+  Box
+  entangle
+
 .. autoclass:: Box
 
   .. rubric:: Methods
@@ -36,8 +40,8 @@ import itertools
 class Box:
   """
 
-    A rectangle in the layout. The position of the rectangle is given by the
-    :attr:`rect` property.
+    Represents a rectangle in the layout. The position of the rectangle is given
+    by the :attr:`rect` property.
 
     All arguments to the constructor are optional, and the same effect can be
     obtained by later constraining the box.
@@ -185,14 +189,19 @@ del attr
 del _add_attr
 
 
-def entangle(*bs):
+def entangle(*boxes):
   """
 
-    Combines the layout in *bs* using :func:`boxes.layout.Layout.merge` and
-    returns the resulting layout.
+    Combines the layout of several boxes.
 
-    This is needed when making custom constraints. Here is an example, setting
-    the width of ``box_1`` to twice the width of ``box_2``.
+    This function uses :func:`boxes.layout.Layout.merge` to combine the layout
+    of each box in *boxes* and returns the resulting layout. This has the effect
+    of informing the library that the equations defining the boxes are
+    intertwined and need to be solved together.
+
+    You rarely need to call this function directly, but it is needed when making
+    custom constraints. Here is an example setting the width of ``box_1`` to
+    twice the width of ``box_2``.
 
     .. doctest::
 
@@ -209,8 +218,14 @@ def entangle(*bs):
       >>> print(box_2.width)
       3.0
 
+    Technically, the call to :func:`boxes.constrain.row` will also entangle the
+    two boxes, so the call to entangle is superfluous here. A good rule is: When
+    manually adding a constraint involving more than one box, :func:`entangle`
+    should be called (instead of grabbing the :attr:`layout` property of one of
+    the boxes).
+
   """
-  layout = bs[0].layout
-  for r in bs[1:]:
+  layout = boxes[0].layout
+  for r in boxes[1:]:
     layout.merge(r.layout)
   return layout

@@ -1,6 +1,14 @@
 """
 boxes.cartesian
 ---------------
+
+.. autosummary::
+  Vect
+  Rect
+
+.. autoclass:: Vect(x, y)
+.. autoclass:: Rect
+
 """
 
 from collections import namedtuple
@@ -13,6 +21,7 @@ class Vect(namedtuple('Vect', 'x y')):
     This a named tuple (see :func:`collections.namedtuple` from the python
     standard library) with an :attr:`x` and a :attr:`y` attribute. Implements
     :func:`__add__` and :func:`__sub__`.
+
   """
 
   def __add__(self, other):

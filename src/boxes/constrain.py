@@ -2,9 +2,6 @@
 boxes.constrain
 ---------------
 
-Summary
-=======
-
 .. autosummary::
   align
   row
@@ -15,9 +12,6 @@ Summary
   width
   height
   size
-
-Details
-=======
 
 """
 
@@ -178,10 +172,12 @@ def width(width, *boxes):
     have the same width.
 
   """
+  layout = entangle(*boxes)
   if isinstance(width, Box):
+    layout.merge(width.layout)
     width = width.width
   for box in boxes:
-    box.layout.equate(box.width, width)
+    layout.equate(box.width, width)
 
 
 @public
@@ -201,10 +197,12 @@ def height(height, *boxes):
     to have the same height.
 
   """
+  layout = entangle(*boxes)
   if isinstance(height, Box):
+    layout.merge(height.layout)
     height = height.height
   for box in boxes:
-    box.layout.equate(box.height, height)
+    layout.equate(box.height, height)
 
 
 @public
@@ -224,10 +222,12 @@ def size(size, *boxes):
     have the same size.
 
   """
+  layout = entangle(*boxes)
   if isinstance(size, Box):
+    layout.merge(size.layout)
     size = size.size
   for box in boxes:
-    box.layout.equate(box.size, size)
+    layout.equate(box.size, size)
 
 
 def _pairs(xs):
