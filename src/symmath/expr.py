@@ -1,68 +1,97 @@
-import operator
+import symmath.numtype
 
 
-class Expr:
+class System:
 
-  def __init__(self, other=None, terms=None):
-    if terms is not None:
-      if other is not None:
-        raise ValueError
-      self.terms = terms
-    elif other is not None:
-      if isinstance(other, Expr):
-        self.terms = other.terms.copy()
-      else:
-        # It is a scalar
-        self.terms = {1: other}
+  def __init__(self, tolerance=1e-8):
+    self.facts = {}
+    self.tolerance = tolerance
+
+  def sym(self, key):
+    return Expr(self, {key: 1})
+
+
+class Expr(symmath.numtype.NumType):
+
+  def __init__(self, system, terms):
+    self.system = system
+    self.terms = terms
+
+  def copy(self):
+    return Expr(self.system, self.terms.copy())
+
+  def _to_expr(self, arg):
+    if isinstance(arg, Expr):
+      assert arg.system is self.system
+      return arg
+    expr = Expr(self.system, {})
+    expr._set(None, arg)
+    return expr
+
+  def _set(self, symbol, value):
+    if abs(value) < self.system.tolerance:
+      try:
+        del self.terms[symbol]
+      except KeyError:
+        pass
     else:
-      self.terms = {}
+      self.terms[symbol] = value
 
-  def _f(self, op, other):
-    r = Expr(self)
-    for k, v in Expr(other).terms.items():
-      x = r.terms.get(k, 0)
-      r.terms[k] = op(x, v)
-    return r
+  def substitue(self, symbol, arg):
+    expr = self._to_expr(arg)
+    try:
+      coef = self.terms.pop(symbol)
+    except KeyError:
+      return
+    self += coef * expr
 
-  def __add__(self, other):
-    return self._f(operator.add, other)
+  def simplify(self):
+    for symbol in list(self.terms):
+      try:
+        expr = self.system.facts[symbol]
+      except KeyError:
+        continue
+      self.substitue(symbol, expr)
 
-  def __sub__(self, other):
-    return self._f(operator.sub, other)
+  def equate(self, other):
+    expr = self - other
+    expr.simplify()
+    symbol, coef = max(
+        ((k, v) for k, v in expr.terms.items() if k is not None),
+        key=lambda x: x[1]
+    )
+    expr.substitue(symbol, 0)
+    expr /= - coef
+    for subs in self.system.facts.values():
+      subs.substitue(symbol, expr)
+    self.system.facts[symbol] = expr
 
-  def __radd__(self, other):
-    return self + other
+  def extract(self):
+    expr = self.copy()
+    expr.simplify()
+    terms = expr.terms
+    if len(terms) == 0:
+      return 0
+    assert len(terms) == 1
+    return terms[None]
 
-  def __rsub__(self, other):
-    return - self + other
-
-  def __ne_g_(self):
-    return self * (-1)
-
-  def __pos__(self):
+  def __iadd__(self, other):
+    other = self._to_expr(other)
+    for s, x in other.terms.items():
+      self._set(s, self.terms.get(s, 0) + x)
     return self
 
-  def _g(self, op, other):
-    r = Expr(self)
-    if isinstance(other, Expr):
-      raise RuntimeError
-    for k in r.terms:
-      r.terms[k] = op(r.terms[k], other)
-    return r
-
-  def __mul__(self, other):
-    return self._g(operator.mul, other)
-
-  def __truediv__(self, other):
-    return self._g(operator.truediv, other)
-
-  def __rmul__(self, other):
-    return self * other
-
-  def __repr__(self):
-    return 'Expr(terms={!r})'.format(self.terms)
+  def __imul__(self, val):
+    items = self.terms.items()
+    self.terms = {}
+    for s, x in items:
+      self._set(s, x * val)
+    return self
 
   def __str__(self):
+    if len(self.terms) == 0:
+      return "0"
+
     acc = ""
 
     first = True
@@ -73,7 +102,7 @@ class Expr:
       # Print sign
       if first:
         if val <= 0:
-          acc += "−"
+          acc += "-"
       else:
         if val <= 0:
           acc += " − "
@@ -81,13 +110,13 @@ class Expr:
           acc += " + "
       first = False
 
-      has_symbol = symbol != 1
+      has_symbol = symbol is not None
 
       # Print number and multiplication sign
-      if abs(val) != 1:
+      if abs(val) != 1 or not has_symbol:
         acc += str(abs(val))
         if has_symbol:
-          acc += "×"
+          acc += " "
 
       # Print symbol
       if has_symbol:
@@ -95,19 +124,5 @@ class Expr:
 
     return acc
 
-
-def sym(name=None):
-  if name is None:
-    name = UnnamedSymbol()
-  return Expr(terms={name: 1})
-
-
-class UnnamedSymbol:
-  register = {}
-  count = 0
-
-  def __str__(self):
-    if self not in UnnamedSymbol.register:
-      UnnamedSymbol.register[self] = "s" + str(UnnamedSymbol.count)
-      UnnamedSymbol.count += 1
-    return UnnamedSymbol.register[self]
+  def __repr__(self):
+    return str(self)
