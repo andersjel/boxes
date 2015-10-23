@@ -16,6 +16,14 @@ doc/_build/stamp: ${examples} ${py-files} ${doc-files}
 doctest:
 	cd doc && make doctest
 
+.PHONY: unittest
+unittest:
+	py.test tests
+
+.PHONY: test
+test:
+	py.test --doctest-modules src tests
+
 .PHONY: examples
 examples: ${examples}
 

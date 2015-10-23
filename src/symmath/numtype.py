@@ -1,7 +1,7 @@
 class NumType:
 
   def __add__(self, x):
-    y = self.copy()
+    y = self.__class__(self)
     y += x
     return y
 
@@ -9,7 +9,7 @@ class NumType:
     return self + x
 
   def __mul__(self, x):
-    y = self.copy()
+    y = self.__class__(self)
     y *= x
     return y
 
