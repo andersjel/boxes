@@ -1,4 +1,4 @@
-class NumType:
+class NumericType:
 
   def __add__(self, x):
     y = self.__class__(self)

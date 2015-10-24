@@ -32,7 +32,7 @@ examples/%.svg: examples/%.py ${py-files}
 
 .PHONY: pretty
 pretty:
-	autopep8 --indent-size 2 -ir src/
+	autopep8 --indent-size 2 -ir src/ tests/
 
 .PHONY: clean
 clean:
