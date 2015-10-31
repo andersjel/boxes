@@ -1,4 +1,5 @@
 from symmath.expr import Expr
+from collections import abc
 
 
 class System:
@@ -19,11 +20,25 @@ class System:
     self.rewrite(expr)
     return expr
 
-  def eval(self, expr):
-    return self.simplify(expr).scalar()
+  def eval(self, val):
+    if hasattr(val, '_symmath_eval'):
+      return val._symmath_eval(self.eval)
+    return self.simplify(val).scalar()
 
   def equate(self, a, b):
+    if hasattr(a, '_symmath_equate'):
+      a._symmath_equate(self.equate, b)
+      return
+    if hasattr(b, '_symmath_equate'):
+      b._symmath_equate(self.equate, a)
+      return
+    if isinstance(a, abc.Iterable) and isinstance(b, abc.Iterable):
+      for x, y in zip(a, b):
+        self.equate(x, y)
+      return
     expr = self.simplify(a - b)
+    if expr == 0:
+      return
     # We now have an equation
     #
     #   0 = c_1 x_1 + c_2 x_2 + ...

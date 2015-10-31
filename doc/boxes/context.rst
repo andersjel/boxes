@@ -1,3 +1,3 @@
-.. automodule:: boxes.layout
+.. automodule:: boxes.context
   :members:
   :undoc-members:

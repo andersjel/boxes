@@ -4,12 +4,10 @@ boxes.display
 """
 
 import cairo
-from boxes import entangle
 
 
 def display(filename, figure, boxes, dots_per_unit=30):
   is_svg = filename.lower().endswith(".svg")
-  figure.layout.merge(entangle(*boxes))
   figure.solve()
 
   width, height = (int(x * dots_per_unit) for x in figure.size)

@@ -16,7 +16,7 @@ boxes.constrain
 """
 
 from boxes.cartesian import Vect, Rect
-from boxes.box import Box, entangle
+from boxes.box import Box
 
 
 __all__ = []
@@ -25,6 +25,14 @@ __all__ = []
 def public(f):
   __all__.append(f.__name__)
   return f
+
+
+_edges = {
+    't': 'top',
+    'b': 'bottom',
+    'l': 'left',
+    'r': 'right',
+}
 
 
 @public
@@ -50,17 +58,10 @@ def align(edges, *boxes):
       An iterable over the :class:`~boxes.box.Box` objects to align.
 
   """
-  layout = entangle(*boxes)
   a = boxes[0]
   for b in boxes[1:]:
     for e in edges:
-      edge = {
-          't': 'top',
-          'b': 'bottom',
-          'l': 'left',
-          'r': 'right',
-      }[e]
-      layout.equate(getattr(a, edge), getattr(b, edge))
+      a.context.equate(getattr(a, _edges[e]), getattr(b, _edges[e]))
 
 
 @public
@@ -115,9 +116,8 @@ def hcat(*boxes, spacing=0):
       :class:`~symmath.expr.Expr`).
 
   """
-  layout = entangle(*boxes)
   for a, b in _pairs(boxes):
-    layout.equate(a.right + spacing, b.left)
+    a.context.equate(a.right + spacing, b.left)
 
 
 @public
@@ -134,9 +134,8 @@ def vcat(*boxes, spacing=0):
       :class:`~symmath.expr.Expr`).
 
   """
-  layout = entangle(*boxes)
   for a, b in _pairs(boxes):
-    layout.equate(a.bottom + spacing, b.top)
+    a.context.equate(a.bottom + spacing, b.top)
 
 
 @public
@@ -152,7 +151,7 @@ def aspect(aspect, *boxes):
 
   """
   for box in boxes:
-    box.layout.equate(box.width, box.height * aspect)
+    box.context.equate(box.width, box.height * aspect)
 
 
 @public
@@ -162,22 +161,13 @@ def width(width, *boxes):
     Constrain the width of every box in *boxes*
 
     :arg width:
-      A :class:`float`, an :class:`~symmath.expr.Expr` object, or a
-      :class:`~boxes.box.Box` object (in which case the :attr:`width` attribute
-      is taken).
+      A :class:`float` or an :class:`~symmath.expr.Expr` object.
     :arg boxes:
       An iterable over :class:`~boxes.box.Box` objects.
 
-    Note, the call ``boxes.constrain.width(*boxes)`` will constrain all boxes to
-    have the same width.
-
   """
-  layout = entangle(*boxes)
-  if isinstance(width, Box):
-    layout.merge(width.layout)
-    width = width.width
   for box in boxes:
-    layout.equate(box.width, width)
+    box.context.equate(box.width, width)
 
 
 @public
@@ -187,22 +177,12 @@ def height(height, *boxes):
     Constrain the height of every box in *boxes*
 
     :arg height:
-      A :class:`float`, an :class:`~symmath.expr.Expr` object, or a
-      :class:`~boxes.box.Box` object (in which case the :attr:`height` attribute
-      is taken).
+      A :class:`float` or an :class:`~symmath.expr.Expr` object.
     :arg boxes:
       An iterable over :class:`~boxes.box.Box` objects.
-
-    Note, the call ``boxes.constrain.height(*boxes)`` will constrain all boxes
-    to have the same height.
-
   """
-  layout = entangle(*boxes)
-  if isinstance(height, Box):
-    layout.merge(height.layout)
-    height = height.height
   for box in boxes:
-    layout.equate(box.height, height)
+    box.context.equate(box.height, height)
 
 
 @public
@@ -212,22 +192,12 @@ def size(size, *boxes):
     Constrain the size of every box in *boxes*
 
     :arg size:
-      A :class:`float`, an :class:`~symmath.expr.Expr` object, or a
-      :class:`~boxes.box.Box` object (in which case the :attr:`size` attribute
-      is taken).
+      A :class:`float` or an :class:`~symmath.expr.Expr` object.
     :arg boxes:
       An iterable over :class:`~boxes.box.Box` objects.
-
-    Note, the call ``boxes.constrain.size(*boxes)`` will constrain all boxes to
-    have the same size.
-
   """
-  layout = entangle(*boxes)
-  if isinstance(size, Box):
-    layout.merge(size.layout)
-    size = size.size
   for box in boxes:
-    layout.equate(box.size, size)
+    box.context.equate(box.size, size)
 
 
 def _pairs(xs):
@@ -235,9 +205,8 @@ def _pairs(xs):
 
 
 def _bbox(boxes):
-  layout = entangle(*boxes)
   return Box(
-      layout=layout,
+      context=boxes[0].context,
       top=boxes[0].top,
       right=boxes[-1].right,
       bottom=boxes[-1].bottom,

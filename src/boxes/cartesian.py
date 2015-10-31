@@ -30,11 +30,8 @@ class Vect(namedtuple('Vect', 'x y')):
   def __sub__(self, other):
     return Vect(u - v for u, v in zip(self, other))
 
-  def _symmath_substitute(self, f):
+  def _symmath_eval(self, f):
     return Vect(f(x) for x in self)
-
-  def _symmath_equate(self, other):
-    return zip(self, other)
 
   def __str__(self):
     def rounded():
@@ -104,7 +101,7 @@ class Rect:
         size=Vect(width, height),
     )
 
-  def _symmath_substitute(self, f):
+  def _symmath_eval(self, f):
     return Rect(
         f(self.top),
         f(self.right),
@@ -112,11 +109,11 @@ class Rect:
         f(self.left),
     )
 
-  def _symmath_equate(self, other):
-    yield self.top, other.top
-    yield self.right, other.right
-    yield self.bottom, other.bottom
-    yield self.left, other.left
+  def _symmath_equate(self, f, other):
+    f(self.top, other.top)
+    f(self.right, other.right)
+    f(self.bottom, other.bottom)
+    f(self.left, other.left)
 
   def __setattr__(self, attr, val):
     raise TypeError("'Rect' objects are immutable")
