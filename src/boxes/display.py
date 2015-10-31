@@ -3,10 +3,10 @@ boxes.display
 -------------
 """
 
-import cairo
-
 
 def display(filename, figure, boxes, dots_per_unit=30):
+  import cairo
+
   is_svg = filename.lower().endswith(".svg")
   figure.solve()
 

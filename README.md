@@ -10,6 +10,8 @@ specify constraints such as
 
 and this library will find a set of coordinates that satisfies the constraints.
 
+See http://boxes.readthedocs.org/ for documentation.
+
 ## The *symmath* package
 
 The *boxes* library builts on top of the included *symmath* package which is a
