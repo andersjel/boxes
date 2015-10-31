@@ -1,6 +1,3 @@
-PYTHONPATH := ${PWD}/src:${PYTHONPATH}
-export PYTHONPATH
-
 py-files = $(shell find src/ -name '*.py')
 examples = $(patsubst %.py, %.svg, $(wildcard examples/*.py))
 doc-files = $(shell find doc/ -name '*.rst') doc/conf.py
