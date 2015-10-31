@@ -11,4 +11,7 @@ setup(
     package_dir={'': 'src'},
     packages=find_packages('src'),
     zip_safe=True,
+    extras_require = {
+        'Simple rendering of boxes':  ['pycairo'],
+    },
 )
