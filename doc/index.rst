@@ -7,17 +7,17 @@ figure line up nicely, with easy control over margins and dimensions.
 
 .. image:: /../examples/example1.*
 
-Here is an example of a problem of this kind (illustrated above): Suppose two
-squares are next to each other with 0.3 units of spacing between them, in a
-figure with margins of 0.3 units and a total width of 6.0 units. How tall is
-this figure? The answer is (6.0 − 0.3 × 3) / 2 + 0.3 × 2 = 3.15. Clearly, as
+The illustration above shows an example of this kind: The figure is 6 units wide
+and contains two squares, and all spacings are 0.3 units. How heigh should the
+figure be? — The answer is (6.0 − 0.3 × 3) / 2 + 0.3 × 2 = 3.15. Clearly, as
 figures become more complicated, solving these kinds of problems by hand quickly
 gets complicated. This is where this library comes in.
 
-Below is code solving the above example::
+Below is code solving the above example:
+
+.. testcode::
 
   import boxes
-
   ctx = boxes.Context()
 
   # Create two squares
@@ -33,7 +33,17 @@ Below is code solving the above example::
   fig.pad(0.3).fix(row)
 
   fig.solve()
-  print(fig.height)  # prints 3.15
+  print("The height of the figure is", fig.height)
+  print("The right edge of the second square is at x =", square2.right)
+
+.. testoutput::
+
+  The height of the figure is 3.15
+  The right edge of the second square is at x = 5.7
+
+This library supports any constraint which can ulitmately be expressed as a set
+of linear equations. See the :doc:`boxes/constrain` module for some examples and
+the :doc:`new-constraints` document for a guide to defining new constraints.
 
 .. toctree::
   :caption: The boxes package

@@ -1,3 +1,11 @@
+"""
+symmath.system
+--------------
+
+.. autoclass:: System
+  :members:
+  :undoc-members:
+"""
 from symmath.expr import Expr
 from collections import abc
 

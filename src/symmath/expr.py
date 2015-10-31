@@ -1,3 +1,12 @@
+"""
+symmath.expr
+------------
+
+.. autoclass:: Expr
+  :members:
+  :undoc-members:
+.. autofunction:: sym
+"""
 import symmath.numerictype
 import symmath.format
 
@@ -27,6 +36,19 @@ class Expr(symmath.numerictype.NumericType):
       self.terms[symbol] = value
 
   def substitue(self, symbol, arg):
+    """
+
+    Replace all occurances of *symbol* with *arg*.
+
+    >>> from symmath import sym
+    >>> x = sym("x")
+    >>> y = sym("y")
+    >>> z = sym("z")
+    >>> e = 2 * x + y + 1
+    >>> e.substitue("x", y + z)
+    >>> print(e)
+    3 y + 2 z + 1
+    """
     coef = self.terms.pop(symbol, 0)
     self += coef * arg
 
@@ -34,6 +56,12 @@ class Expr(symmath.numerictype.NumericType):
     value = self[None]
     assert self == value
     return value
+
+  def name(self):
+    name, = self.terms
+    assert name is not None
+    assert self[name] == 1
+    return name
 
   def __iadd__(self, other):
     for s, x in Expr(other).terms.items():
@@ -50,7 +78,7 @@ class Expr(symmath.numerictype.NumericType):
     return len(diff.terms) == 0
 
   def __str__(self):
-    return symmath.format.format(self.terms.items())
+    return symmath.format.format(self)
 
   def __repr__(self):
     return "Expr(" + str(self) + ")"

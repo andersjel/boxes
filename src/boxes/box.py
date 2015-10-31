@@ -2,10 +2,6 @@
 boxes.box
 ---------
 
-.. autosummary::
-  Box
-  context_of
-
 .. autoclass:: Box
 
   .. rubric:: Methods
@@ -24,8 +20,7 @@ boxes.box
 
   .. attribute:: context
 
-    The :class:`boxes.context.Context` of this box. You rarely need to access
-    this directly (use :func:`context_of` instead).
+    The :class:`boxes.context.Context` of this box.
 
 """
 
@@ -39,8 +34,8 @@ class Box:
     Represents a rectangle in the latout. The position of the rectangle is given
     by the :attr:`rect` property.
 
-    All arguments to the constructor are optional, and the same effect can be
-    obtained by later constraining the box.
+    All keyword arguments to the constructor are optional, and the same effect
+    can be obtained by later constraining the box.
 
     :arg boxes.context.Context context:
       The context the box belongs to.
@@ -51,6 +46,10 @@ class Box:
 
     In addition, any property of :class:`~boxes.cartesian.Rect` can be used as a
     keyword argument to the constructor, which will introduce a constraint.
+
+    Note, that :class:`Box` instances can also be obtained by calling the
+    :meth:`~boxes.context.Context.box` method of a
+    :class:`~boxes.context.Context` instance.
 
   """
 
@@ -100,6 +99,15 @@ class Box:
 
       If :const:`True` (which is the default) constrain ``self.loc`` to ``(0,
       0)`` before solving the context.
+
+    >>> from boxes import Context
+    >>> ctx = Context()
+    >>> box = ctx.box(size=(6.0, 10.0))
+    >>> (box.width, box.height)
+    (Expr(x1 - x3), Expr(-x0 + x2))
+    >>> box.solve()
+    >>> (box.width, box.height)
+    (6.0, 10.0)
 
     """
     if fix_upper_left:

@@ -55,7 +55,7 @@ def align(edges, *boxes):
     :arg str edges:
       Any combination of the letters ``'t'``, ``'r'``, ``'b'``, and ``'l'``.
     :arg boxes:
-      An iterable over the :class:`~boxes.box.Box` objects to align.
+      The :class:`~boxes.box.Box` objects to align.
 
   """
   a = boxes[0]
@@ -72,7 +72,7 @@ def row(*boxes, spacing=0):
     between them. The boxes will align along the top and bottom edges.
 
     :arg boxes:
-      An iterable over the :class:`~boxes.box.Box` objects to put in a row.
+      The :class:`~boxes.box.Box` objects to put in a row.
     :arg spacing:
       The spacing between the boxes (this can be a :class:`float` or an
       :class:`~symmath.expr.Expr`).
@@ -91,10 +91,11 @@ def column(*boxes, spacing=0):
     between them. The boxes will align along the left and right edges.
 
     :arg boxes:
-      An iterable over the :class:`~boxes.box.Box` objects to put in a column.
+      The :class:`~boxes.box.Box` objects to put in a column.
     :arg spacing:
-      The spacing between the boxes (this can be a :class:`float` or an
-      :class:`~symmath.expr.Expr`).
+      The spacing between the boxes.
+    :type spacing:
+      a :class:`float` or an :class:`~symmath.expr.Expr`
 
   """
   vcat(*boxes, spacing=spacing)
@@ -110,10 +111,11 @@ def hcat(*boxes, spacing=0):
     way.
 
     :arg boxes:
-      An iterable over :class:`~boxes.box.Box` objects.
+      :class:`~boxes.box.Box` objects.
     :arg spacing:
-      The spacing between the boxes (this can be a :class:`float` or an
-      :class:`~symmath.expr.Expr`).
+      The spacing between the boxes.
+    :type spacing:
+      a :class:`float` or an :class:`~symmath.expr.Expr`
 
   """
   for a, b in _pairs(boxes):
@@ -128,10 +130,11 @@ def vcat(*boxes, spacing=0):
     way.
 
     :arg boxes:
-      An iterable over :class:`~boxes.box.Box` objects.
+      :class:`~boxes.box.Box` objects.
     :arg spacing:
-      The spacing between the boxes (this can be a :class:`float` or an
-      :class:`~symmath.expr.Expr`).
+      The spacing between the boxes.
+    :type spacing:
+      a :class:`float` or an :class:`~symmath.expr.Expr`
 
   """
   for a, b in _pairs(boxes):
@@ -147,7 +150,7 @@ def aspect(aspect, *boxes):
     :arg float aspect:
       The aspect ratio is defined as the width divided by the height.
     :arg boxes:
-      An iterable over :class:`~boxes.box.Box` objects.
+      :class:`~boxes.box.Box` objects.
 
   """
   for box in boxes:
@@ -163,7 +166,7 @@ def width(width, *boxes):
     :arg width:
       A :class:`float` or an :class:`~symmath.expr.Expr` object.
     :arg boxes:
-      An iterable over :class:`~boxes.box.Box` objects.
+      :class:`~boxes.box.Box` objects.
 
   """
   for box in boxes:
@@ -179,7 +182,7 @@ def height(height, *boxes):
     :arg height:
       A :class:`float` or an :class:`~symmath.expr.Expr` object.
     :arg boxes:
-      An iterable over :class:`~boxes.box.Box` objects.
+      :class:`~boxes.box.Box` objects.
   """
   for box in boxes:
     box.context.equate(box.height, height)
@@ -194,7 +197,7 @@ def size(size, *boxes):
     :arg size:
       A :class:`float` or an :class:`~symmath.expr.Expr` object.
     :arg boxes:
-      An iterable over :class:`~boxes.box.Box` objects.
+      :class:`~boxes.box.Box` objects.
   """
   for box in boxes:
     box.context.equate(box.size, size)

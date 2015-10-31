@@ -21,8 +21,7 @@ unittest:
 	py.test tests
 
 .PHONY: test
-test:
-	py.test --doctest-modules src tests
+test: doctest unittest
 
 .PHONY: examples
 examples: ${examples}

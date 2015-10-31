@@ -1,5 +1,4 @@
 import boxes
-
 ctx = boxes.Context()
 
 # Create two squares
@@ -15,7 +14,8 @@ fig = ctx.box(width=6.0)
 fig.pad(0.3).fix(row)
 
 fig.solve()
-print(fig.height)  # prints 3.15
+print("The height of the figure is", fig.height)
+print("The right edge of the second square is at x =", square2.right)
 
 if __name__ == '__main__':
   import sys
