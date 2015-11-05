@@ -91,14 +91,11 @@ class Box:
   def solve(self, fix_upper_left=True):
     """
 
-    Solves the associated :attr:`context`. After calling this method, this box
-    and all boxes entangled with it will have concrete values for their
-    dimensions instead of symbolic expressions.
+    Calling this method has two effects:
 
-    :arg bool fix_upper_left:
-
-      If :const:`True` (which is the default) constrain ``self.loc`` to ``(0,
-      0)`` before solving the context.
+    #.  If *fix_upper_left* is True (the default), a constraint is added
+        setting ``self.loc == (0, 0)``.
+    #.  :func:`~boxes.context.Context.solve` is called on :attr:`Box.context`.
 
     >>> from boxes import Context
     >>> ctx = Context()

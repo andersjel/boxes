@@ -5,6 +5,20 @@ boxes.display
 
 
 def display(filename, figure, boxes, dots_per_unit=30):
+  """
+
+  Output a figure showing the location of the given *boxes* to *filename*. This
+  function calls ``figure.solve()`` and uses the size of ``figure`` as the size
+  of the image. This function is meant for quick visualization.
+
+  :arg string filename: The output file. Must end in ``.svg`` or ``.png``.
+  :arg figure: Defines the size of the figure.
+  :type figure: :class:`~boxes.box.Box`
+  :arg boxes: The boxes to draw.
+  :type boxes: An iterable of :class:`~boxes.box.Box` instances
+  :arg float dots_per_unit: Scaling factor.
+
+  """
   import cairo
 
   is_svg = filename.lower().endswith(".svg")
