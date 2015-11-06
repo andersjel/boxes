@@ -5,45 +5,50 @@ The purpose of the boxes library is to align rectangles in 2D based on fairly
 general *constraints*. For instance, it can be used to make sub-plots in a
 figure line up nicely, with easy control over margins and dimensions.
 
-.. image:: /../examples/example1.*
+.. image:: /figures/index.*
 
 The illustration above shows an example of this kind: The figure is 6 units wide
-and contains two squares, and all spacings are 0.3 units. How heigh should the
-figure be? — The answer is (6.0 − 0.3 × 3) / 2 + 0.3 × 2 = 3.15. Clearly, as
-figures become more complicated, solving these kinds of problems by hand quickly
-gets complicated. This is where this library comes in.
+and contains a square and a rectangle twice as wide; all spacings are 0.3 units.
+How heigh should the figure be? — The answer is (6.0 − 0.3 × 3) / 3 + 0.3 × 2 =
+2.3. Clearly, as figures become more complicated, solving these kinds of
+problems by hand quickly gets complicated. This is where this library comes in.
 
 Below is code solving the above example:
 
 .. testcode::
 
-  import boxes
-  ctx = boxes.Context()
+  from boxes import Context, constrain
 
-  # Create two squares
-  square1 = ctx.box(aspect=1)
-  square2 = ctx.box(aspect=1)
+  ctx = Context()
 
-  # Put them next to each other
-  row = boxes.constrain.row(square1, square2, spacing=0.3)
+  # A box representing the figure. We only define its width.
+  fig = ctx.box(width=6)
 
-  # Create a box representing the figure
-  fig = ctx.box(width=6.0)
-  # And insert row with 0.3 units of padding
+  # Create a square of any size, and a rectangle twice as wide
+  square = ctx.box(aspect=1)
+  rectangle = ctx.box(width=2 * square.width)
+
+  # Align the square and rectangle next to each other.
+  row = constrain.row(square, rectangle, spacing=0.3)
+
+  # Put them in the figure with 0.3 units of margins.
   fig.pad(0.3).fix(row)
 
   fig.solve()
   print("The height of the figure is", fig.height)
-  print("The right edge of the second square is at x =", square2.right)
 
 .. testoutput::
 
-  The height of the figure is 3.15
-  The right edge of the second square is at x = 5.7
+  The height of the figure is 2.3
+
+.. testcode::
+  :hide:
+
+  from boxes.display import display
+  display("figures/index.svg", fig, (square, rectangle))
 
 This library supports any constraint which can ulitmately be expressed as a set
-of linear equations. See the :doc:`boxes/constrain` module for some examples and
-the :doc:`new-constraints` document for a guide to defining new constraints.
+of linear equations. See the :doc:`boxes/constrain` module for some examples.
 
 .. toctree::
   :caption: The boxes package
