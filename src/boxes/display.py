@@ -30,13 +30,13 @@ def display(filename, figure, boxes, dots_per_unit=30):
   is_svg = filename.lower().endswith(".svg")
   figure.solve()
 
-  width, height = (int(x * dots_per_unit) + 3 for x in figure.size)
+  width, height = (int(x * dots_per_unit) + 1 for x in figure.size)
   if is_svg:
     surf = cairo.SVGSurface(filename, width, height)
   else:
     surf = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
   ctx = cairo.Context(surf)
-  ctx.translate(1.5, 1.5)
+  ctx.translate(0.5, 0.5)
   ctx.scale(dots_per_unit, dots_per_unit)
   ctx.set_line_width(1/dots_per_unit)
 
@@ -45,13 +45,6 @@ def display(filename, figure, boxes, dots_per_unit=30):
   ctx.fill_preserve()
   ctx.set_source_rgb(0.7/1.5, 0.8/1.5, 1.0/1.5)
   ctx.stroke()
-
-  ctx.translate(2/dots_per_unit, 2/dots_per_unit)
-  for box in boxes:
-    _trace(ctx, box)
-  ctx.set_source_rgba(0, 0, 0, 0.4)
-  ctx.fill()
-  ctx.translate(-2/dots_per_unit, -2/dots_per_unit)
 
   for box in boxes:
     _trace(ctx, box)

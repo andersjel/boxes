@@ -55,7 +55,6 @@ of linear equations. See the :doc:`boxes/constrain` module for some examples.
   :maxdepth: 2
 
   boxes-intro
-  new-constraints
   boxes-reference
 
 .. toctree::

@@ -2,9 +2,15 @@
 symmath.expr
 ------------
 
+.. doctest::
+  :hide:
+
+  >>> from symmath import *
+
 .. autoclass:: Expr
   :members:
   :undoc-members:
+
 .. autofunction:: sym
 """
 import symmath.numerictype
@@ -12,6 +18,19 @@ import symmath.format
 
 
 class Expr(symmath.numerictype.NumericType):
+  """
+
+  Class used for symbolic computations. :doc:`/symmath-intro` describes what
+  operations this class supports.
+
+  .. attribute:: terms
+
+    A mapping from symbol names to their coefficients.
+
+  .. attribute:: tolerance
+
+    Numbers smaller than the *tolerance* in absolute value are converted to 0.
+  """
 
   def __init__(self, other=None, tolerance=1e-8):
     if isinstance(other, Expr):
@@ -30,10 +49,13 @@ class Expr(symmath.numerictype.NumericType):
       return 0
 
   def __setitem__(self, symbol, value):
-    if abs(value) < self.tolerance:
+    if abs(value) <= self.tolerance:
       self.terms.pop(symbol, None)
     else:
       self.terms[symbol] = value
+
+  def __delitem__(self, symbol):
+    self[symbol] = 0
 
   def substitue(self, symbol, arg):
     """
@@ -53,15 +75,27 @@ class Expr(symmath.numerictype.NumericType):
     self += coef * arg
 
   def scalar(self):
+    """
+
+    If *x* contains no symbols, ``x.scalar()`` returns a regular float equal to
+    the scalar part of *x*. Otherwise an exception is raised.
+
+    >>> a = sym('a')
+    >>> x = a + 3
+    >>> x.scalar()
+    Traceback (most recent call last):
+      ...
+    AssertionError: ...
+    >>> x -= a
+    >>> x
+    Expr(3)
+    >>> x.scalar()
+    3
+
+    """
     value = self[None]
     assert self == value
     return value
-
-  def name(self):
-    name, = self.terms
-    assert name is not None
-    assert self[name] == 1
-    return name
 
   def __iadd__(self, other):
     for s, x in Expr(other).terms.items():
@@ -84,7 +118,13 @@ class Expr(symmath.numerictype.NumericType):
     return "Expr(" + str(self) + ")"
 
 
-def sym(name):
+def sym(symbol):
+  """
+  Create an expression containing just the given symbol.
+
+  >>> sym('a')
+  Expr(a)
+  """
   expr = Expr()
-  expr[name] = 1
+  expr[symbol] = 1
   return expr
