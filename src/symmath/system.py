@@ -19,7 +19,7 @@ symmath.system
     fact instead of modifying this dictionary.
 
 """
-from symmath.expr import Expr
+from symmath.expr import Expr, SymmathError
 from collections import abc
 
 
@@ -73,6 +73,20 @@ class System:
     Eliminate one symbol from the system by using the equation: *a = b*.
     This adds a fact to :attr:`facts` and simplifies all existing facts.
 
+    An error is raised if this equation over-constrains the system.
+
+    .. doctest::
+
+      >>> x = sym('x')
+      >>> y = sym('y')
+      >>> system = System()
+      >>> system.equate(x + 1, 2*y)
+      >>> system.equate(2*x, y + 2)
+      >>> system.equate(x, y)
+      Traceback (most recent call last):
+        ...
+      SymmathError: System is over-constrained
+
     Classes can define :func:`_symmath_equate` to customize what it means
     objects of that class to be equal to something else.
 
@@ -119,10 +133,10 @@ class System:
     #
     # where {x_1, x_2, ... } are symbols. We find the pair (x_i, c_i) where c_i
     # is maximal, as this will lead to the smallest round-off errors later.
-    symbol, coef = max(
-        ((k, v) for k, v in expr.terms.items() if k is not None),
-        key=lambda x: x[1]
-    )
+    terms = [(k, v) for k, v in expr.terms.items() if k is not None]
+    if not terms:
+      raise SymmathError('System is over-constrained')
+    symbol, coef = max(terms, key=lambda x: x[1])
     # We now rearrange x_i = (c_1 x_1 + c_2 x_2 + ...) / c_i
     expr[symbol] = 0
     expr /= - coef

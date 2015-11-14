@@ -7,6 +7,9 @@ symmath.expr
 
   >>> from symmath import *
 
+.. autoexception:: SymmathError
+  :show-inheritance:
+
 .. autoclass:: Expr
   :members:
   :undoc-members:
@@ -15,6 +18,10 @@ symmath.expr
 """
 import symmath.numerictype
 import symmath.format
+
+
+class SymmathError(ValueError):
+  pass
 
 
 class Expr(symmath.numerictype.NumericType):
@@ -85,7 +92,7 @@ class Expr(symmath.numerictype.NumericType):
     >>> x.scalar()
     Traceback (most recent call last):
       ...
-    AssertionError: ...
+    SymmathError: Not a scalar
     >>> x -= a
     >>> x
     Expr(3)
@@ -94,7 +101,8 @@ class Expr(symmath.numerictype.NumericType):
 
     """
     value = self[None]
-    assert self == value
+    if self != value:
+      raise SymmathError('Not a scalar')
     return value
 
   def __iadd__(self, other):
@@ -103,6 +111,8 @@ class Expr(symmath.numerictype.NumericType):
     return self
 
   def __imul__(self, val):
+    if isinstance(val, Expr):
+      raise SymmathError('Symmath expressions cannot be multiplied together')
     for s in list(self.terms):
       self[s] *= val
     return self

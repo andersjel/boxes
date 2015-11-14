@@ -14,7 +14,7 @@ Expr(6 a + 2 b + 4)
 >>> a * b
 Traceback (most recent call last):
   ...
-TypeError: ...
+SymmathError: Symmath expressions cannot be multiplied together
 
 To convert an expression to a regular number, use
 :func:`symmath.expr.Expr.scalar()`, which throws an exception if an expression
@@ -26,7 +26,7 @@ contains symbols (which obviously cannot be converted).
 >>> (x - b).scalar()
 Traceback (most recent call last):
   ...
-AssertionError: ...
+SymmathError: Not a scalar
 
 Expressions can be copied and modified in place.
 
