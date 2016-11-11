@@ -4,9 +4,9 @@ boxes
 
 Convenience reexports. Typing ``from boxes import *`` imports the following:
 
-* The class :class:`boxes.box.Context` which which you need to instance to use
-  the library.
-* The module :mod:`boxes.constrain` which contains a bunch of convenient
+* The class :class:`~boxes.box.Context` which is the starting point of the
+  library.
+* The module :mod:`~boxes.constrain` which contains a bunch of convenient
   constraints.
 
 """

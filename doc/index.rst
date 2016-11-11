@@ -7,9 +7,14 @@ figure line up nicely, with easy control over margins and dimensions.
 
 .. image:: /figures/index.*
 
-The illustration above shows an example of this kind: The figure is 6 units wide
-and contains a square and a rectangle twice as wide; all spacings are 0.3 units.
-How heigh should the figure be? — The answer is (6.0 − 0.3 × 3) / 3 + 0.3 × 2 =
+The illustration above shows an example of this kind:
+
+- The figure is 6 units wide
+- It contains a square and a rectangle.
+- The rectangle has an aspect ratio of 2:1.
+- All spacings are 0.3 units.
+
+How high should the figure be? — The answer is (6.0 − 0.3 × 3) / 3 + 0.3 × 2 =
 2.3. Clearly, as figures become more complicated, solving these kinds of
 problems by hand quickly gets complicated. This is where this library comes in.
 
