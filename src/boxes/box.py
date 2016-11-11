@@ -25,7 +25,6 @@ boxes.box
 """
 
 from boxes.cartesian import Vect, Rect
-import itertools
 
 
 class Box:
@@ -154,12 +153,18 @@ class Box:
       >>> print(inner_box.loc, inner_box.size)
       (1.0, 0.5) (4.0, 4.0)
     """
+    top = right = bottom = left = args[0]
+    if len(args) > 1:
+      right = left = args[1]
+    if len(args) > 2:
+      bottom = args[2]
+    if len(args) > 3:
+      left = args[3]
     if len(args) > 4:
       raise TypeError(
           'Box.pad(..) takes at most 4 arguments ({} was given).'
           .format(len(args))
       )
-    top, right, bottom, left = itertools.islice(itertools.cycle(args), 4)
     rect = Rect(
         top=self.rect.top + top,
         right=self.rect.right - right,
@@ -180,3 +185,6 @@ class Box:
     if attr in self._rect_attrs:
       return getattr(self.rect, attr)
     raise AttributeError
+
+  def __repr__(self):
+    return 'Box(loc=%s, size=%s)' % (self.loc, self.size)

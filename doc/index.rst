@@ -50,6 +50,8 @@ Below is code solving the above example:
   :hide:
 
   from boxes.display import display
+  square.annotation = 'square'
+  rectangle.annotation = 'rectangle (2:1)'
   display("figures/index.svg", fig, (square, rectangle))
 
 This library supports any constraint which can ulitmately be expressed as a set

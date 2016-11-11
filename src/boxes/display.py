@@ -53,5 +53,16 @@ def display(filename, figure, boxes, dots_per_unit=30):
   ctx.set_source_rgb(0, 0, 0)
   ctx.stroke()
 
+
+  ctx.select_font_face("Roboto Slab", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_NORMAL)
+  ctx.set_font_size(11 / dots_per_unit)
+  ctx.set_source_rgb(0, 0, 0)
+
+  for box in boxes:
+    if hasattr(box, 'annotation'):
+      _, td, _, _, _ = ctx.font_extents()
+      ctx.move_to(box.left + 4 / dots_per_unit, box.bottom - td - 3 / dots_per_unit)
+      ctx.show_text(box.annotation)
+
   if not is_svg:
     surf.write_to_png(filename)
